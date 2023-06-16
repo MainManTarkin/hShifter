@@ -1,0 +1,17 @@
+        db  5h,  1h                ; USAGE_PAGE (Generic Desktop)
+        db  9h,  5h                ; USAGE (Game Pad)
+        db a1h,  1h                ; COLLECTION (Application)
+        db a1h,  0h                ;   COLLECTION (Physical)
+        db  5h,  9h                ;     USAGE_PAGE (Button)
+        db 19h,  1h                ;     USAGE_MINIMUM (Button 1)
+        db 29h,  ah                ;     USAGE_MAXIMUM (Button 10)
+        db 15h,  0h                ;     LOGICAL_MINIMUM (0)
+        db 25h,  1h                ;     LOGICAL_MAXIMUM (1)
+        db 95h,  ah                ;     REPORT_COUNT (10)
+        db 75h,  1h                ;     REPORT_SIZE (1)
+        db 81h,  2h                ;     INPUT (Data,Var,Abs)
+        db 95h,  1h                ;     REPORT_COUNT (1)
+        db 75h,  6h                ;     REPORT_SIZE (6)
+        db 81h,  3h                ;     INPUT (Cnst,Var,Abs)
+        db c0h                     ;   END_COLLECTION
+        db c0h                     ; END_COLLECTION
