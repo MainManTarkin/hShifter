@@ -7,23 +7,25 @@
 
  /*					Used Pins
  -----------------------------------------------------------
- ATMEGA used pins
+ATMEGA used pins
 
-PORTB - used for shifting
+PORTB - used for shifting(all pins reserved)
 
 PORTC - 
 	pc5 (pin 28) used for TWI SCL
-	pc4 (pin 27) used for TWO SDA
+	pc4 (pin 27) used for TWI SDA
 	pc0 (pin 23) used for level button
 	pc1 (pin 24) used for shifter button
 	
-	button change are detected using pin change intrupt	
+	button change are detected using pin change interrupt
 
 PORTD -
-	PD2 (pin 4) used for external intrupt for shift change
-	PD3 (pin 5) used for external intrupt for test light
+	PD2 (pin 4) used for external interrupt for shift change
+	PD3 (pin 5) used for external interrupt for test light
 	PD0 (pin 2) used for gpio intrupt for HID
 	PD1 (pin 3) used to drive test LED	
+
+FUSES:
 
 lfuse:E2
 hfuse:D7
@@ -68,6 +70,9 @@ hfuse:D7
 	rjmp usbTWI ; 2-wire Serial Interface Handler
 
 ;end of vectorTable
+
+;----------------------------------------------------------------------------------
+
 ;start IRQH
 
 testButton:
@@ -161,6 +166,7 @@ usbTWI:
 reti
 
 ;end of IRQH
+;--------------------------------------------------------------------------------------
 
 start: ; Main program start
 //intialize stack pointer
@@ -258,6 +264,12 @@ start: ; Main program start
 
 
 	sei
+
+	;-------------------------------------------------------------------------------------------
+	//the main routine acts as the primary event loop
+	//eventLoop is the location of memory that stores the bit flags for each event that can occur in this program
+	//the address for eventLoop is stored in the X pointer registers
+
 main:
 
 	ld r2, x
@@ -272,13 +284,14 @@ main:
 
 rjmp main
 
-//test fuctions (to be removed in later versions
+//test fuctions (to be removed in later versions)
+//if any errors appear bring error pin high for LED indicator
 errorCatchLoop:
 	sbi PORTD, PortDTestLedBitNum
 	daLoopOfError:
 	rjmp daLoopOfError
 
-
+	;TestButton creates a blocking delay in the program (to be removed in later versions)
 testButtonActivated:
 	//insert parameters for delay loop 
 	ldi r22, 0xCF;----------------------------------
@@ -306,6 +319,10 @@ testButtonActivated:
 ret
 
 //end of test functions
+
+//the pins for are H-Shifter have changed their logic levels get the states 
+//and store this in the HID input register, hold the INT line high to indicate to hid chip 
+//that the host need to handle this new change
 
 getShiftValues:
 	
@@ -343,7 +360,8 @@ getShiftValues:
 	
 ret
 
-
+//The USB host has indicated the that all devices have to go in to low power mode
+//put the device in low power mode until woken up again
 powerDownMode:
 	
 	rcall errorCatchLoop
@@ -359,6 +377,7 @@ powerDownMode:
 
 ret
 
+//a request to this slave device was made on the TWI bus, HANDLE IT HERE!
 mainFlagHandler:
 	
 	//remove TWI flag bit

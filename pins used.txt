@@ -1,20 +1,22 @@
 ATMEGA used pins
 
-PORTB - used for shifting
+PORTB - used for shifting(all pins reserved)
 
 PORTC - 
 	pc5 (pin 28) used for TWI SCL
-	pc4 (pin 27) used for TWO SDA
+	pc4 (pin 27) used for TWI SDA
 	pc0 (pin 23) used for level button
 	pc1 (pin 24) used for shifter button
 	
-	button change are detected using pin change intrupt	
+	button change are detected using pin change interrupt
 
 PORTD -
-	PD2 (pin 4) used for external intrupt for shift change
-	PD3 (pin 5) used for external intrupt for test light
+	PD2 (pin 4) used for external interrupt for shift change
+	PD3 (pin 5) used for external interrupt for test light
 	PD0 (pin 2) used for gpio intrupt for HID
 	PD1 (pin 3) used to drive test LED	
+
+FUSES:
 
 lfuse:E2
 hfuse:D7
