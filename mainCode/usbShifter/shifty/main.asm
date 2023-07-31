@@ -262,6 +262,9 @@ start: ; Main program start
 	out EIFR, r25
 	out PCIFR, r25
 
+	//clear zero register
+	ldi r17, 0
+	mov r1, r17
 
 	sei
 
@@ -274,6 +277,9 @@ main:
 
 	ld r2, x
 
+	ldi r24, 4
+	mov r2, r24
+
 	sbrc r2, twiFlagBitNum;check for TWI flag
 	rcall mainFlagHandler
 
@@ -282,6 +288,7 @@ main:
 	sbrc r2, testFlagBitNum ; the test button was pressed
 	rcall testButtonActivated
 
+	
 rjmp main
 
 //test fuctions (to be removed in later versions)
@@ -621,7 +628,7 @@ ret
 		
 	statusConDataRecieved: ; data has been recevied while in slave write mode
 
-		//rcall hidWriteHandler
+		rcall hidWriteHandler
 		rjmp mainHidEventHandlerEnd
 	statusConEOT: ; transmission ended reset hid flag for good measure
 		
@@ -768,9 +775,9 @@ ret
 	sbrs r16, writeFlagCheckCommandBit
 	rjmp endOfHidWriteHandler
 
-	cpi r30, hidCommandRegisterLow
+	cpi r24, hidCommandRegisterLow
 	brne endOfHidWriteHandler
-	cpi r31, hidCommandRegisterHigh
+	cpi r25, hidCommandRegisterHigh
 	brne endOfHidWriteHandler
 
 	ori r16, writeFlagCommandProcMask
@@ -953,7 +960,7 @@ ret
 
 	//hid bit masks
 
-	.equ writeFlagCounterMask = 0xFE
+	.equ writeFlagCounterMask = 0x01
 	.equ writeFlagCommandProcMask = 0x08
 
 	//end of hid bit masks
