@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Sun Jul 30 20:22:32 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Mon Jul 31 16:53:45 2023
 
 
 EQU  SIGNATURE_000 0000001e
@@ -690,7 +690,7 @@ EQU  eventLoopHigh 00000001
 EQU  addTestFlagBit 00000008
 EQU  addShiftFlagBit 00000001
 EQU  addTWIFlagBit 00000004
-CSEG delayLoop    0000019f
+CSEG delayLoop    0000019e
 EQU  ddrPortCMask 0000000c
 EQU  ddrPortDMask 000000f3
 EQU  anyLogicalChangeBitSet 00000005
@@ -709,7 +709,7 @@ EQU  hidDesriptorRegisterLow 0000002f
 EQU  hidDesriptorRegisterHigh 00000001
 CSEG initHidDriver 000000c0
 EQU  TWIslaveAddress 00000006
-CSEG setUpI2CDevice 00000188
+CSEG setUpI2CDevice 00000187
 CSEG main         00000085
 EQU  twiFlagBitNum 00000002
 CSEG mainFlagHandler 000000b6
@@ -725,7 +725,7 @@ CSEG clearTestLedDriver 0000009d
 CSEG endOfTesDelay 0000009e
 EQU  removeShiftFlagBit 000000fe
 EQU  pincButtonMask 00000003
-CSEG hidSetInputVal 00000175
+CSEG hidSetInputVal 00000174
 CSEG failedInputHIDnew 000000ac
 CSEG hidPullIntruptLine 0000015d
 CSEG doneWithShiftValuesGet 000000ae
@@ -733,16 +733,16 @@ CSEG powerDownMode 000000af
 EQU  sleepBitMask 00000005
 EQU  removeTWIFlagBit 000000fb
 CSEG mainHidEventHandler 000000d6
-CSEG hidGetErrorCode 00000171
-EQU  forceResetError 00000001
-EQU  powerLowError 00000002
+CSEG hidGetErrorCode 00000170
+EQU  resetBitErr  00000000
+EQU  powerBitErr  00000001
 EQU  hidWriteRegisterLow 0000002a
 EQU  hidWriteRegisterHigh 00000001
 EQU  hidErrorFlagLow 0000002e
 EQU  hidErrorFlagHigh 00000001
 CSEG reportLoopCompare 000000d3
 CSEG reportEEPROMLoop 000000ce
-CSEG getI2Cstatus 00000192
+CSEG getI2Cstatus 00000191
 EQU  beginWrite   00000060
 CSEG statusConBeginWrite 000000e0
 EQU  dataRecieved 00000080
@@ -767,8 +767,8 @@ EQU  hidReadCounterHigh 00000001
 CSEG hidReadHandler 000000fd
 EQU  potbGPIOintruptPinBit 00000002
 CSEG contToRead   00000106
-CSEG writeI2Cdata 0000019b
-CSEG readI2Cdata  00000197
+CSEG writeI2Cdata 0000019a
+CSEG readI2Cdata  00000196
 EQU  writeFlagCounterMask 00000001
 EQU  writeFlagCommandBit 00000003
 CSEG hidCommandProcess 0000013b
@@ -789,8 +789,10 @@ CSEG setPowerCommandJump 00000158
 CSEG endOfCommandProc 0000015c
 EQU  hidInputRegisterLow 00000026
 EQU  hidInputRegisterHigh 00000001
-CSEG hidFinnishedPullUp 00000170
-CSEG hidFillInputRegDone 00000186
+EQU  forceResetError 00000001
+EQU  powerLowError 00000002
+CSEG hidFinnishedPullUp 0000016f
+CSEG hidFillInputRegDone 00000185
 EQU  hidInputRegisterLength 00000004
 EQU  resetCommandLowB 00000000
 EQU  resetWriteFlagBit 00000010
@@ -829,6 +831,6 @@ EQU  outPutRegisterLow 0000004d
 EQU  outPutRegisterHigh 00000001
 EQU  outputRegisterLength 00000001
 EQU  eventLoopLength 00000001
-CSEG delayLoopCompare 000001a4
-CSEG delayLoopDec 000001a0
-CSEG delayLoopEnd 000001ab
+CSEG delayLoopCompare 000001a3
+CSEG delayLoopDec 0000019f
+CSEG delayLoopEnd 000001aa

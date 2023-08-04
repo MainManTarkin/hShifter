@@ -398,9 +398,9 @@ mainFlagHandler:
 	rcall mainHidEventHandler ; let the hid handler take care of the TWI line
 	rcall hidGetErrorCode ; check to see if there is anything the main program must do from this end
 
-	sbrc r24, forceResetError
+	sbrc r24, resetBitErr
 	rcall hidPullIntruptLine
-	sbrc r24, powerLowError 
+	sbrc r24, powerBitErr 
 	rcall powerDownMode ; if device is told to power down being going into low current mode
 
 ret
@@ -482,6 +482,13 @@ ret
 		
 
 	//enof event flag bit defines
+
+	//hid bit errors
+	.equ resetBitErr = 0x00
+	.equ powerBitErr = 0x01
+
+	//enof hid bit errors
+
 
 //enof main file defines
 
@@ -801,8 +808,8 @@ ret
 	ldi r30, hidCommandRegisterLow
 	ldi r31, hidCommandRegisterHigh
 
-	ld r25, z+
-	ld r24, z
+	ld r24, z+
+	ld r25, z
 
 	//comapre to opcodes
 	cpi r25, resetCommandHighB
@@ -830,7 +837,7 @@ ret
 		rjmp endOfCommandProc
 
 	getReportCommandJump:
-		//incomeing report read set write read register to input for reading
+		//incoming report read set write read register to input for reading
 		ldi r30, hidWriteRegisterLow
 		ldi r31, hidWriteRegisterHigh
 
@@ -863,7 +870,6 @@ ret
  //I2C HID exposed driver functions
 
  hidPullIntruptLine://if return in r24 is anything other then zero it failed to pull the line
- rcall errorCatchLoop
 	//check to make sure no on going transaction is occuring
 	//get the flag value
 	ldi r30, hidFlagLow

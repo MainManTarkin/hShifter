@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Sun Jul 30 20:22:32 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Mon Jul 31 16:53:45 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
@@ -1153,7 +1153,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 000055 e080                      	ldi r24, 0x00;
 000056 e090                      	ldi r25, 0x00;--------------------------------
                                  
-000057 d147                      	rcall delayLoop
+000057 d146                      	rcall delayLoop
                                  
                                  //set up i/o DD Registers
                                  
@@ -1218,7 +1218,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 000079 e086                      	ldi r24, TWIslaveAddress ;load r24 with TWI slave address 0x03
 00007a 2799                      	clr r25
                                  
-00007b d10c                      	rcall setUpI2CDevice
+00007b d10b                      	rcall setUpI2CDevice
                                  
                                  	//setup event flag pointer
                                  
@@ -1275,7 +1275,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 000093 e080                      	ldi r24, 0x00;
 000094 e090                      	ldi r25, 0x00;--------------------------------
                                  
-000095 d109                      	rcall delayLoop
+000095 d108                      	rcall delayLoop
                                  
 000096 910c                      	ld r16, x
                                  
@@ -1318,7 +1318,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  
 0000a4 7093                      	andi r25, pincButtonMask
                                  
-0000a5 d0cf                      	rcall hidSetInputVal
+0000a5 d0ce                      	rcall hidSetInputVal
 0000a6 1581                      	cp r24, r1
 0000a7 f421                      	brne failedInputHIDnew
                                  	
@@ -1365,11 +1365,11 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  	//began the calls for a HID handle
                                  
 0000b9 d01c                      	rcall mainHidEventHandler ; let the hid handler take care of the TWI line
-0000ba d0b6                      	rcall hidGetErrorCode ; check to see if there is anything the main program must do from this end
+0000ba d0b5                      	rcall hidGetErrorCode ; check to see if there is anything the main program must do from this end
                                  
-0000bb fd81                      	sbrc r24, forceResetError
+0000bb fd80                      	sbrc r24, resetBitErr
 0000bc d0a0                      	rcall hidPullIntruptLine
-0000bd fd82                      	sbrc r24, powerLowError 
+0000bd fd81                      	sbrc r24, powerBitErr 
 0000be dff0                      	rcall powerDownMode ; if device is told to power down being going into low current mode
                                  
 0000bf 9508                      ret
@@ -1451,6 +1451,13 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  		
                                  
                                  	//enof event flag bit defines
+                                 
+                                 	//hid bit errors
+                                 	.equ resetBitErr = 0x00
+                                 	.equ powerBitErr = 0x01
+                                 
+                                 	//enof hid bit errors
+                                 
                                  
                                  //enof main file defines
                                  
@@ -1571,7 +1578,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  
                                   mainHidEventHandler:	; the hid event handler runs under the assumption that the 
                                  	
-0000d6 d0bb                      	rcall getI2Cstatus
+0000d6 d0ba                      	rcall getI2Cstatus
                                  
                                  	//move to specfic function based on status call
                                  
@@ -1686,7 +1693,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 00010d 8200                      	st z, r0
                                  
                                  	//set data to tranmit in TWI data register
-00010e d08c                      	rcall writeI2Cdata
+00010e d08b                      	rcall writeI2Cdata
                                  
 00010f 91bf                      	pop r27
 000110 91af                      	pop r26
@@ -1702,7 +1709,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  
                                  	//get data that was written
                                  
-000116 d080                      	rcall readI2Cdata
+000116 d07f                      	rcall readI2Cdata
 000117 2e08                      	mov r0, r24
                                  
                                  	//load the write flag into register 16
@@ -1744,9 +1751,9 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 00012d ff02                      	sbrs r16, writeFlagCheckCommandBit
 00012e c006                      	rjmp endOfHidWriteHandler
                                  
-00012f 32e0                      	cpi r30, hidCommandRegisterLow
+00012f 3280                      	cpi r24, hidCommandRegisterLow
 000130 f421                      	brne endOfHidWriteHandler
-000131 30f1                      	cpi r31, hidCommandRegisterHigh
+000131 3091                      	cpi r25, hidCommandRegisterHigh
 000132 f411                      	brne endOfHidWriteHandler
                                  
 000133 6008                      	ori r16, writeFlagCommandProcMask
@@ -1770,8 +1777,8 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 00013b e2e0                      	ldi r30, hidCommandRegisterLow
 00013c e0f1                      	ldi r31, hidCommandRegisterHigh
                                  
-00013d 9191                      	ld r25, z+
-00013e 8180                      	ld r24, z
+00013d 9181                      	ld r24, z+
+00013e 8190                      	ld r25, z
                                  
                                  	//comapre to opcodes
 00013f 3091                      	cpi r25, resetCommandHighB
@@ -1799,7 +1806,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
 000150 c00b                      		rjmp endOfCommandProc
                                  
                                  	getReportCommandJump:
-                                 		//incomeing report read set write read register to input for reading
+                                 		//incoming report read set write read register to input for reading
 000151 e2ea                      		ldi r30, hidWriteRegisterLow
 000152 e0f1                      		ldi r31, hidWriteRegisterHigh
                                  
@@ -1832,91 +1839,90 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                   //I2C HID exposed driver functions
                                  
                                   hidPullIntruptLine://if return in r24 is anything other then zero it failed to pull the line
-00015d df31                       rcall errorCatchLoop
                                  	//check to make sure no on going transaction is occuring
                                  	//get the flag value
-00015e e2ec                      	ldi r30, hidFlagLow
-00015f e0f1                      	ldi r31, hidFlagHigh
+00015d e2ec                      	ldi r30, hidFlagLow
+00015e e0f1                      	ldi r31, hidFlagHigh
                                  
-000160 8180                      	ld r24, z
+00015f 8180                      	ld r24, z
                                  
-000161 1581                      	cp r24, r1
-000162 f469                      	brne hidFinnishedPullUp
+000160 1581                      	cp r24, r1
+000161 f469                      	brne hidFinnishedPullUp
                                  	
                                  	//get read count as indication of ungoing read transaction
-000163 e2ed                      	ldi r30, hidReadCounterLow
-000164 e0f1                      	ldi r31, hidReadCounterHigh
+000162 e2ed                      	ldi r30, hidReadCounterLow
+000163 e0f1                      	ldi r31, hidReadCounterHigh
                                  
-000165 8180                      	ld r24, z
+000164 8180                      	ld r24, z
                                  
-000166 1581                      	cp r24, r1
-000167 f441                      	brne hidFinnishedPullUp
+000165 1581                      	cp r24, r1
+000166 f441                      	brne hidFinnishedPullUp
                                  
                                  	//if made it here there is no ongoign I2C transaction
                                  	//set input register for reading in write register
-000168 e2ea                      	ldi r30, hidWriteRegisterLow
-000169 e0f1                      	ldi r31, hidWriteRegisterHigh
-00016a e266                      	ldi r22, hidInputRegisterLow
-00016b e071                      	ldi r23, hidInputRegisterHigh
+000167 e2ea                      	ldi r30, hidWriteRegisterLow
+000168 e0f1                      	ldi r31, hidWriteRegisterHigh
+000169 e266                      	ldi r22, hidInputRegisterLow
+00016a e071                      	ldi r23, hidInputRegisterHigh
                                  
-00016c 9361                      	st z+, r22
-00016d 8370                      	st z, r23
+00016b 9361                      	st z+, r22
+00016c 8370                      	st z, r23
                                  	//pull the gpio line high
                                  
-00016e 9a5a                      	sbi PORTD, potbGPIOintruptPinBit
+00016d 9a5a                      	sbi PORTD, potbGPIOintruptPinBit
                                  
-00016f 2d81                      	mov r24, r1
+00016e 2d81                      	mov r24, r1
                                  	hidFinnishedPullUp:
                                  
-000170 9508                       ret
+00016f 9508                       ret
                                  
                                  
                                   hidGetErrorCode:
                                   //set z pointer to error flag ld r24 and return that code
-000171 e2ee                      	ldi r30, hidErrorFlagLow
-000172 e0f1                      	ldi r31, hidErrorFlagHigh
+000170 e2ee                      	ldi r30, hidErrorFlagLow
+000171 e0f1                      	ldi r31, hidErrorFlagHigh
                                  
-000173 8180                      	ld r24, z
+000172 8180                      	ld r24, z
                                  
-000174 9508                       ret
+000173 9508                       ret
                                  
                                   hidSetInputVal://r24-25 value to to input register
                                  				//if return in r24 is anything other then zero it failed to pull the line
                                  
                                  	//check to make sure no on going transaction is occuring
                                  	//get the flag value
-000175 e2ec                      	ldi r30, hidFlagLow
-000176 e0f1                      	ldi r31, hidFlagHigh
+000174 e2ec                      	ldi r30, hidFlagLow
+000175 e0f1                      	ldi r31, hidFlagHigh
                                  
-000177 8140                      	ld r20, z
+000176 8140                      	ld r20, z
                                  
-000178 1541                      	cp r20, r1
-000179 f461                      	brne hidFillInputRegDone
+000177 1541                      	cp r20, r1
+000178 f461                      	brne hidFillInputRegDone
                                  	
                                  	//get read count as indication of ungoing read transaction
-00017a e2ed                      	ldi r30, hidReadCounterLow
-00017b e0f1                      	ldi r31, hidReadCounterHigh
+000179 e2ed                      	ldi r30, hidReadCounterLow
+00017a e0f1                      	ldi r31, hidReadCounterHigh
                                  
-00017c 8140                      	ld r20, z
+00017b 8140                      	ld r20, z
                                  
-00017d 1541                      	cp r20, r1
-00017e f439                      	brne hidFillInputRegDone
+00017c 1541                      	cp r20, r1
+00017d f439                      	brne hidFillInputRegDone
                                  	
                                  	//if made to this point no ongoing I2C HID transaction is ocurring
-00017f e2e6                      	ldi r30, hidInputRegisterLow
-000180 e0f1                      	ldi r31, hidInputRegisterHigh
+00017e e2e6                      	ldi r30, hidInputRegisterLow
+00017f e0f1                      	ldi r31, hidInputRegisterHigh
                                  
-000181 e064                      	ldi r22, hidInputRegisterLength
+000180 e064                      	ldi r22, hidInputRegisterLength
                                  
                                  	//store (length of report) + (report data) in input register
-000182 9361                      	st z+, r22
-000183 9211                      	st z+, r1
-000184 9381                      	st z+, r24
-000185 8390                      	st z, r25
+000181 9361                      	st z+, r22
+000182 9211                      	st z+, r1
+000183 9381                      	st z+, r24
+000184 8390                      	st z, r25
                                  
                                  	hidFillInputRegDone: 
-000186 2f84                      	mov r24, r20
-000187 9508                       ret
+000185 2f84                      	mov r24, r20
+000186 9508                       ret
                                  
                                   //enof I2C HID exposed driver functions
                                  
@@ -2006,27 +2012,27 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                   setUpI2CDevice: //r24 slave address to set (loads full byte into address register including general call address FYI)
                                  
                                  	//set the two wire bit rate
-000188 ebe8                      	ldi r30, TWBR //setup pointer to the bit rate Two wire register
-000189 27ff                      	clr r31	;clear high z pointer 
+000187 ebe8                      	ldi r30, TWBR //setup pointer to the bit rate Two wire register
+000188 27ff                      	clr r31	;clear high z pointer 
                                  
-00018a e092                      	ldi r25, twiBitMaskRate ; value of 2 for bit rate to achieve 400khz fast mode
+000189 e092                      	ldi r25, twiBitMaskRate ; value of 2 for bit rate to achieve 400khz fast mode
                                  
-00018b 8390                      	st z, r25
+00018a 8390                      	st z, r25
                                  
                                  	//set the slave address
-00018c ebea                      	ldi r30, TWAR
+00018b ebea                      	ldi r30, TWAR
                                  
-00018d 8380                      	st z, r24
+00018c 8380                      	st z, r24
                                  
                                  	//set the control register
-00018e ebec                      	ldi r30, TWCR
-00018f e495                      	ldi r25, twiControlRegMask
+00018d ebec                      	ldi r30, TWCR
+00018e e495                      	ldi r25, twiControlRegMask
                                  
-000190 8390                      	st z, r25
+00018f 8390                      	st z, r25
                                  
                                  	
                                  
-000191 9508                       ret
+000190 9508                       ret
                                  
                                   //end of I2C intialization
                                  
@@ -2035,34 +2041,34 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  
                                   getI2Cstatus:
                                  
-000192 ebe9                      	ldi r30, TWSR
-000193 27ff                      	clr r31
-000194 8180                      	ld r24, z
+000191 ebe9                      	ldi r30, TWSR
+000192 27ff                      	clr r31
+000193 8180                      	ld r24, z
                                  	
                                  
-000195 7f88                      	andi r24, 0xF8 ; keep only status flag
+000194 7f88                      	andi r24, 0xF8 ; keep only status flag
                                  
                                  	
                                  
-000196 9508                       ret
+000195 9508                       ret
                                  
                                   readI2Cdata:
                                  
-000197 ebeb                      	ldi r30, TWDR
-000198 27ff                      	clr r31
+000196 ebeb                      	ldi r30, TWDR
+000197 27ff                      	clr r31
                                  
-000199 8180                      	ld r24, z
+000198 8180                      	ld r24, z
                                  
-00019a 9508                       ret
+000199 9508                       ret
                                  
                                   writeI2Cdata:
                                  
-00019b ebeb                      	ldi r30, TWDR
-00019c 27ff                      	clr r31
+00019a ebeb                      	ldi r30, TWDR
+00019b 27ff                      	clr r31
                                  
-00019d 8380                      	st z, r24
+00019c 8380                      	st z, r24
                                  
-00019e 9508                       ret
+00019d 9508                       ret
                                  
                                  
                                   //end of I2C driver functions
@@ -2195,24 +2201,24 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  //delay values is calculated as follows
                                  //(MCUhz - 10) / 12 = 1 sec loop iterations * number of secs to run = 32bit input val
                                  
-00019f c004                      	rjmp delayLoopCompare
+00019e c004                      	rjmp delayLoopCompare
                                  	// 5 cycles set up
                                  
                                  	delayLoopDec:
                                  
-0001a0 5061                      		subi r22, 1
-0001a1 4070                      		sbci r23, 0
-0001a2 4080                      		sbci r24, 0
-0001a3 4090                      		sbci r25, 0
+00019f 5061                      		subi r22, 1
+0001a0 4070                      		sbci r23, 0
+0001a1 4080                      		sbci r24, 0
+0001a2 4090                      		sbci r25, 0
                                  		//4 cycles
                                  	delayLoopCompare:
-0001a4 2400                      		clr r0
-0001a5 2a06                      		or r0, r22
-0001a6 2a07                      		or r0, r23
-0001a7 2a08                      		or r0, r24
-0001a8 2a09                      		or r0, r25
-0001a9 1401                      		cp r0, r1
-0001aa f7a9                      		BRNE delayLoopDec
+0001a3 2400                      		clr r0
+0001a4 2a06                      		or r0, r22
+0001a5 2a07                      		or r0, r23
+0001a6 2a08                      		or r0, r24
+0001a7 2a09                      		or r0, r25
+0001a8 1401                      		cp r0, r1
+0001a9 f7a9                      		BRNE delayLoopDec
                                  		//8 cycles total  
                                  
                                  		//one loop is 12 cycles
@@ -2221,7 +2227,7 @@ AVRASM ver. 2.2.8  C:\Users\brand\Documents\ECE\projects\hshift\mainCode\usbShif
                                  		//5 cycles (this includes the former BRNE statement) for clean 
                                  
                                  
-0001ab 9508                      ret
+0001aa 9508                      ret
                                  
 
 
@@ -2243,8 +2249,8 @@ counted separately from r26..r31 here.
 x  :  12 y  :   0 z  :  55 r0 :  12 r1 :  20 r2 :   5 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
 r13:   0 r14:   0 r15:   0 r16:  25 r17:   7 r18:   0 r19:   0 r20:  12 
-r21:   3 r22:  14 r23:  12 r24:  86 r25:  30 r26:   9 r27:   9 r28:   0 
-r29:   0 r30:  46 r31:  41 
+r21:   3 r22:  14 r23:  12 r24:  87 r25:  31 r26:   9 r27:   9 r28:   0 
+r29:   0 r30:  45 r31:  40 
 Registers used: 17 out of 35 (48.6%)
 
 "ATmega48A" instruction use summary:
@@ -2260,7 +2266,7 @@ cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0
 icall :   0 ijmp  :   0 in    :   3 inc   :   3 ld    :  26 ldd   :   0 
 ldi   : 106 lds   :   0 lpm   :   0 lsl   :   0 lsr   :   0 mov   :  10 
 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :  20 
-or    :   4 ori   :   7 out   :  11 pop   :  18 push  :  18 rcall :  26 
+or    :   4 ori   :   7 out   :  11 pop   :  18 push  :  18 rcall :  25 
 ret   :  18 reti  :   4 rjmp  :  25 rol   :   0 ror   :   0 sbc   :   0 
 sbci  :   3 sbi   :   4 sbic  :   1 sbis  :   0 sbiw  :   0 sbr   :   0 
 sbrc  :   6 sbrs  :   2 sec   :   0 seh   :   0 sei   :   1 sen   :   0 
@@ -2272,7 +2278,7 @@ Instructions used: 33 out of 111 (29.7%)
 "ATmega48A" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000358    856      0    856    4096  20.9%
+[.cseg] 0x000000 0x000356    854      0    854    4096  20.8%
 [.dseg] 0x000100 0x000100      0      0      0     512   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
