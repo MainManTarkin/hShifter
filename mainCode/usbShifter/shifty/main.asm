@@ -370,8 +370,6 @@ ret
 //The USB host has indicated the that all devices have to go in to low power mode
 //put the device in low power mode until woken up again
 powerDownMode:
-	
-	rcall errorCatchLoop
 
 	ldi r20, sleepBitMask
 
@@ -855,10 +853,6 @@ ret
 
 		ldi r23, powerLowError
 		st z, r23
-
-
-
-
 	endOfCommandProc:
 
 
@@ -898,8 +892,12 @@ ret
 
 	st z+, r22
 	st z, r23
-	//pull the gpio line high
+	//clear the error(afteraction) register
+	ldi r30, hidErrorFlagLow
+	ldi r31, hidErrorFlagHigh
 
+	st z, r1
+	//pull the gpio line high
 	sbi PORTD, potbGPIOintruptPinBit
 
 	mov r24, r1

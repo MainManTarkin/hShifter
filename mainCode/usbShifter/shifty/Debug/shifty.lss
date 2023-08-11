@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Mon Jul 31 16:53:45 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Aug 10 20:20:26 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
@@ -1153,7 +1153,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 000055 e080                      	ldi r24, 0x00;
 000056 e090                      	ldi r25, 0x00;--------------------------------
                                  
-000057 d146                      	rcall delayLoop
+000057 d148                      	rcall delayLoop
                                  
                                  //set up i/o DD Registers
                                  
@@ -1198,7 +1198,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 00006e e040                      	ldi r20, hidReportRegisterLow
 00006f e051                      	ldi r21, hidReportRegisterHigh
                                  
-000070 d059                      	rcall fillReportRegister
+000070 d058                      	rcall fillReportRegister
                                  
                                  	//fill hid register with hid descriptor
 000071 e281                      	ldi r24, eepromHidDescriptorOffset
@@ -1208,17 +1208,17 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 000075 e24f                      	ldi r20, hidDesriptorRegisterLow
 000076 e051                      	ldi r21, hidDesriptorRegisterHigh
                                  
-000077 d052                      	rcall fillReportRegister
+000077 d051                      	rcall fillReportRegister
                                  
                                  	//init the hid driver
                                  
-000078 d047                      	rcall initHidDriver
+000078 d046                      	rcall initHidDriver
                                  	
                                  	//init TWI interface
 000079 e086                      	ldi r24, TWIslaveAddress ;load r24 with TWI slave address 0x03
 00007a 2799                      	clr r25
                                  
-00007b d10b                      	rcall setUpI2CDevice
+00007b d10d                      	rcall setUpI2CDevice
                                  
                                  	//setup event flag pointer
                                  
@@ -1250,7 +1250,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 000087 2e28                      	mov r2, r24
                                  
 000088 fc22                      	sbrc r2, twiFlagBitNum;check for TWI flag
-000089 d02c                      	rcall mainFlagHandler
+000089 d02b                      	rcall mainFlagHandler
                                  
 00008a fc20                      	sbrc r2, shiftFlagBitNum ; shift ocurred on the exint0 pin or pin change related to the buttons
 00008b d013                      	rcall getShiftValues
@@ -1275,7 +1275,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 000093 e080                      	ldi r24, 0x00;
 000094 e090                      	ldi r25, 0x00;--------------------------------
                                  
-000095 d108                      	rcall delayLoop
+000095 d10a                      	rcall delayLoop
                                  
 000096 910c                      	ld r16, x
                                  
@@ -1318,11 +1318,11 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  
 0000a4 7093                      	andi r25, pincButtonMask
                                  
-0000a5 d0ce                      	rcall hidSetInputVal
+0000a5 d0d0                      	rcall hidSetInputVal
 0000a6 1581                      	cp r24, r1
 0000a7 f421                      	brne failedInputHIDnew
                                  	
-0000a8 d0b4                      	rcall hidPullIntruptLine
+0000a8 d0b3                      	rcall hidPullIntruptLine
 0000a9 1581                      	cp r24, r1
 0000aa f409                      	brne failedInputHIDnew
                                  
@@ -1339,40 +1339,38 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  //The USB host has indicated the that all devices have to go in to low power mode
                                  //put the device in low power mode until woken up again
                                  powerDownMode:
-                                 	
-0000af dfdf                      	rcall errorCatchLoop
                                  
-0000b0 e045                      	ldi r20, sleepBitMask
+0000af e045                      	ldi r20, sleepBitMask
                                  
-0000b1 bf43                      	out SMCR, r20; set sleep enable bit
+0000b0 bf43                      	out SMCR, r20; set sleep enable bit
                                  
-0000b2 9588                      	sleep
+0000b1 9588                      	sleep
                                  
-0000b3 e044                      	ldi r20, sleepModePowerDownMask
-0000b4 bf43                      	out SMCR, r20; clear sleep enable bit
+0000b2 e044                      	ldi r20, sleepModePowerDownMask
+0000b3 bf43                      	out SMCR, r20; clear sleep enable bit
                                  
-0000b5 9508                      ret
+0000b4 9508                      ret
                                  
                                  //a request to this slave device was made on the TWI bus, HANDLE IT HERE!
                                  mainFlagHandler:
                                  	
                                  	//remove TWI flag bit
-0000b6 910c                      	ld r16, x
+0000b5 910c                      	ld r16, x
                                  
-0000b7 7f0b                      	andi r16, removeTWIFlagBit
+0000b6 7f0b                      	andi r16, removeTWIFlagBit
                                  
-0000b8 930c                      	st x, r16
+0000b7 930c                      	st x, r16
                                  	//began the calls for a HID handle
                                  
-0000b9 d01c                      	rcall mainHidEventHandler ; let the hid handler take care of the TWI line
-0000ba d0b5                      	rcall hidGetErrorCode ; check to see if there is anything the main program must do from this end
+0000b8 d01c                      	rcall mainHidEventHandler ; let the hid handler take care of the TWI line
+0000b9 d0b8                      	rcall hidGetErrorCode ; check to see if there is anything the main program must do from this end
                                  
-0000bb fd80                      	sbrc r24, resetBitErr
-0000bc d0a0                      	rcall hidPullIntruptLine
-0000bd fd81                      	sbrc r24, powerBitErr 
-0000be dff0                      	rcall powerDownMode ; if device is told to power down being going into low current mode
+0000ba fd80                      	sbrc r24, resetBitErr
+0000bb d0a0                      	rcall hidPullIntruptLine
+0000bc fd81                      	sbrc r24, powerBitErr 
+0000bd dff1                      	rcall powerDownMode ; if device is told to power down being going into low current mode
                                  
-0000bf 9508                      ret
+0000be 9508                      ret
                                  
                                  //main file defines
                                  
@@ -1525,50 +1523,50 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  
                                  initHidDriver:
                                  //prepare write register for reading HID descriptor
-0000c0 e2ea                      	ldi r30, hidWriteRegisterLow
-0000c1 e0f1                      	ldi r31, hidWriteRegisterHigh
+0000bf e2ea                      	ldi r30, hidWriteRegisterLow
+0000c0 e0f1                      	ldi r31, hidWriteRegisterHigh
                                  
-0000c2 e28f                      	ldi r24, hidDesriptorRegisterLow
-0000c3 e091                      	ldi r25, hidDesriptorRegisterHigh
+0000c1 e28f                      	ldi r24, hidDesriptorRegisterLow
+0000c2 e091                      	ldi r25, hidDesriptorRegisterHigh
                                  
                                  	//store write register with address of hid descriptor
-0000c4 9381                      	st z+, r24
-0000c5 8390                      	st z, r25
+0000c3 9381                      	st z+, r24
+0000c4 8390                      	st z, r25
                                  
                                  	//init error register to zero
-0000c6 e2ee                      	ldi r30, hidErrorFlagLow
-0000c7 e0f1                      	ldi r31, hidErrorFlagHigh
+0000c5 e2ee                      	ldi r30, hidErrorFlagLow
+0000c6 e0f1                      	ldi r31, hidErrorFlagHigh
                                  
-0000c8 8210                      	st z, r1
+0000c7 8210                      	st z, r1
                                  
-0000c9 9508                      ret
+0000c8 9508                      ret
                                  
                                   fillReportRegister://r24 eeprom address offset | r22 length of report | r20 register desanation
                                  	
-0000ca 2fe4                      	mov r30, r20
-0000cb 2ff5                      	mov r31, r21
+0000c9 2fe4                      	mov r30, r20
+0000ca 2ff5                      	mov r31, r21
                                  	
-0000cc 0f68                      	add r22, r24 ; add the offset to the length to get the proper comparison value
+0000cb 0f68                      	add r22, r24 ; add the offset to the length to get the proper comparison value
                                  
                                  	//clr r0	; used as counter
-0000cd c005                      	rjmp reportLoopCompare
+0000cc c005                      	rjmp reportLoopCompare
                                  
                                  	//eeprom read loop
                                  	reportEEPROMLoop:
                                  		//add r24, r0	; add to the offset for whatever r0 is
-0000ce bd81                      		out EEARL, r24 ; set read address
-0000cf 9af8                      		sbi EECR,EERE ; begin read from EEPROM
-0000d0 b590                      		in r25,EEDR ; get data from eeprom data
+0000cd bd81                      		out EEARL, r24 ; set read address
+0000ce 9af8                      		sbi EECR,EERE ; begin read from EEPROM
+0000cf b590                      		in r25,EEDR ; get data from eeprom data
                                  
-0000d1 9391                      		st z+, r25	; store in dest register and increment pointer
-0000d2 9583                      		inc r24	; increment r0 count
+0000d0 9391                      		st z+, r25	; store in dest register and increment pointer
+0000d1 9583                      		inc r24	; increment r0 count
                                  
                                  	reportLoopCompare:
-0000d3 1786                      		cp r24, r22
-0000d4 f7c9                      		brne reportEEPROMLoop
+0000d2 1786                      		cp r24, r22
+0000d3 f7c9                      		brne reportEEPROMLoop
                                  
                                  
-0000d5 9508                       ret
+0000d4 9508                       ret
                                  
                                  
                                  
@@ -1578,63 +1576,63 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  
                                   mainHidEventHandler:	; the hid event handler runs under the assumption that the 
                                  	
-0000d6 d0ba                      	rcall getI2Cstatus
+0000d5 d0bd                      	rcall getI2Cstatus
                                  
                                  	//move to specfic function based on status call
                                  
                                  	//check for  SLA+W status
                                  
-0000d7 3680                      	cpi r24, beginWrite
-0000d8 f039                      		breq statusConBeginWrite
-0000d9 3880                      	cpi r24, dataRecieved
-0000da f049                      		breq statusConDataRecieved
-0000db 3a80                      	cpi r24, eot
-0000dc f049                      		breq statusConEOT
-0000dd 3888                      	cpi r24, datRecivendNotAcked 
-0000de f041                      		breq errorStatusNAcked
+0000d6 3680                      	cpi r24, beginWrite
+0000d7 f039                      		breq statusConBeginWrite
+0000d8 3880                      	cpi r24, dataRecieved
+0000d9 f049                      		breq statusConDataRecieved
+0000da 3a80                      	cpi r24, eot
+0000db f049                      		breq statusConEOT
+0000dc 3888                      	cpi r24, datRecivendNotAcked 
+0000dd f041                      		breq errorStatusNAcked
                                  	
                                  
-0000df c008                      	rjmp codeConvertSLARbegin
+0000de c008                      	rjmp codeConvertSLARbegin
                                  
                                  	statusConBeginWrite: ; slave address has been called with a write bit reset the hid flag now
-0000e0 e2ec                      		ldi r30, hidFlagLow
-0000e1 e0f1                      		ldi r31, hidFlagHigh
-0000e2 8210                      		st z, r1
-0000e3 c013                      		rjmp mainHidEventHandlerEnd
+0000df e2ec                      		ldi r30, hidFlagLow
+0000e0 e0f1                      		ldi r31, hidFlagHigh
+0000e1 8210                      		st z, r1
+0000e2 c013                      		rjmp mainHidEventHandlerEnd
                                  		
                                  	statusConDataRecieved: ; data has been recevied while in slave write mode
                                  
-0000e4 d02d                      		rcall hidWriteHandler
-0000e5 c011                      		rjmp mainHidEventHandlerEnd
+0000e3 d02d                      		rcall hidWriteHandler
+0000e4 c011                      		rjmp mainHidEventHandlerEnd
                                  	statusConEOT: ; transmission ended reset hid flag for good measure
                                  		
-0000e6 cff9                      		rjmp statusConBeginWrite
+0000e5 cff9                      		rjmp statusConBeginWrite
                                  	errorStatusNAcked:
-0000e7 dfa7                      		rcall errorCatchLoop
+0000e6 dfa8                      		rcall errorCatchLoop
                                  	
                                  
                                  	//check for SLA+R
                                  	codeConvertSLARbegin: 
-0000e8 3a88                      	cpi r24, beginRead
-0000e9 f029                      	breq statusConBeganRead
-0000ea 3b88                      	cpi r24, sentDataAcked
-0000eb f041                      	breq statusConDataAcked
-0000ec 3c80                      	cpi r24, sentDataNotAcked
-0000ed f041                      	breq statusConDataNAcked
-0000ee c008                      	rjmp mainHidEventHandlerEnd
+0000e7 3a88                      	cpi r24, beginRead
+0000e8 f029                      	breq statusConBeganRead
+0000e9 3b88                      	cpi r24, sentDataAcked
+0000ea f041                      	breq statusConDataAcked
+0000eb 3c80                      	cpi r24, sentDataNotAcked
+0000ec f041                      	breq statusConDataNAcked
+0000ed c008                      	rjmp mainHidEventHandlerEnd
                                  
                                  	statusConBeganRead:
-0000ef e2ed                      		ldi r30, hidReadCounterLow
-0000f0 e0f1                      		ldi r31, hidReadCounterHigh
-0000f1 8210                      		st z, r1
-0000f2 d00a                      		rcall hidReadHandler
-0000f3 c003                      		rjmp mainHidEventHandlerEnd
+0000ee e2ed                      		ldi r30, hidReadCounterLow
+0000ef e0f1                      		ldi r31, hidReadCounterHigh
+0000f0 8210                      		st z, r1
+0000f1 d00a                      		rcall hidReadHandler
+0000f2 c003                      		rjmp mainHidEventHandlerEnd
                                  
                                  	statusConDataAcked:
-0000f4 d008                      		rcall hidReadHandler
-0000f5 c001                      		rjmp mainHidEventHandlerEnd
+0000f3 d008                      		rcall hidReadHandler
+0000f4 c001                      		rjmp mainHidEventHandlerEnd
                                  	statusConDataNAcked:
-0000f6 985a                      		cbi PORTD, potbGPIOintruptPinBit ; clear the gpio pin regardless of set or not
+0000f5 985a                      		cbi PORTD, potbGPIOintruptPinBit ; clear the gpio pin regardless of set or not
                                  
                                  
                                  	
@@ -1646,192 +1644,188 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  	
                                  	//remove TWI intrupt flag so bus master can resume control
                                  	//and renable global intrupts
-0000f7 ebec                      	ldi r30, TWCR
-0000f8 27ff                      	clr r31
-0000f9 8180                      	ld r24, z
-0000fa 6881                      	ori r24, 0x81
-0000fb 8380                      	st z, r24
+0000f6 ebec                      	ldi r30, TWCR
+0000f7 27ff                      	clr r31
+0000f8 8180                      	ld r24, z
+0000f9 6881                      	ori r24, 0x81
+0000fa 8380                      	st z, r24
                                  
                                  
-0000fc 9508                       ret
+0000fb 9508                       ret
                                  
                                  
                                   hidReadHandler:
                                  
-0000fd 93af                      	push r26
-0000fe 93bf                      	push r27
+0000fc 93af                      	push r26
+0000fd 93bf                      	push r27
                                  
                                  	//get the register from which the read is taking place on
-0000ff e2ea                      	ldi r30, hidWriteRegisterLow
-000100 e0f1                      	ldi r31, hidWriteRegisterHigh
+0000fe e2ea                      	ldi r30, hidWriteRegisterLow
+0000ff e0f1                      	ldi r31, hidWriteRegisterHigh
                                  
-000101 91a1                      	ld r26, z+
-000102 81b0                      	ld r27, z
+000100 91a1                      	ld r26, z+
+000101 81b0                      	ld r27, z
                                  
-000103 32af                      	cpi r26, 0x2F
-000104 f409                      	brne contToRead
+000102 32af                      	cpi r26, 0x2F
+000103 f409                      	brne contToRead
                                  	
                                  	//set to hid descriptor address high
-000105 e0b1                      	ldi r27, 0x01
+000104 e0b1                      	ldi r27, 0x01
                                  
                                  
                                  	contToRead:
                                  
                                  	//get read counter (to add to current address offset)
-000106 e2ed                      	ldi r30, hidReadCounterLow
-000107 e0f1                      	ldi r31, hidReadCounterHigh
+000105 e2ed                      	ldi r30, hidReadCounterLow
+000106 e0f1                      	ldi r31, hidReadCounterHigh
                                  
-000108 8000                      	ld r0, z
+000107 8000                      	ld r0, z
                                  
-000109 0da0                      	add r26, r0
-00010a 1db1                      	adc r27, r1
+000108 0da0                      	add r26, r0
+000109 1db1                      	adc r27, r1
                                  	//get data to transmit on the bus
-00010b 918c                      	ld r24, x
+00010a 918c                      	ld r24, x
                                  
                                  	//increment read counter and store back
-00010c 9403                      	inc r0
-00010d 8200                      	st z, r0
+00010b 9403                      	inc r0
+00010c 8200                      	st z, r0
                                  
                                  	//set data to tranmit in TWI data register
-00010e d08b                      	rcall writeI2Cdata
+00010d d08e                      	rcall writeI2Cdata
                                  
-00010f 91bf                      	pop r27
-000110 91af                      	pop r26
+00010e 91bf                      	pop r27
+00010f 91af                      	pop r26
                                  
-000111 9508                       ret
+000110 9508                       ret
                                  
                                  
                                   hidWriteHandler:
-000112 93af                      	push r26
-000113 93bf                      	push r27
-000114 930f                      	push r16
-000115 931f                      	push r17
+000111 93af                      	push r26
+000112 93bf                      	push r27
+000113 930f                      	push r16
+000114 931f                      	push r17
                                  
                                  	//get data that was written
                                  
-000116 d07f                      	rcall readI2Cdata
-000117 2e08                      	mov r0, r24
+000115 d082                      	rcall readI2Cdata
+000116 2e08                      	mov r0, r24
                                  
                                  	//load the write flag into register 16
-000118 e2ac                      	ldi r26, hidFlagLow
-000119 e0b1                      	ldi r27, hidFlagHigh
+000117 e2ac                      	ldi r26, hidFlagLow
+000118 e0b1                      	ldi r27, hidFlagHigh
                                  
-00011a 910c                      	ld r16, x
+000119 910c                      	ld r16, x
                                  
                                  	//get byte counter
-00011b 2f10                      	mov r17, r16
-00011c 7011                      	andi r17, writeFlagCounterMask ; remove all bits except the counter bit
+00011a 2f10                      	mov r17, r16
+00011b 7011                      	andi r17, writeFlagCounterMask ; remove all bits except the counter bit
                                  
                                  	//check to see if a command is being processed
-00011d fd03                      	sbrc r16, writeFlagCommandBit
-00011e d01c                      	rcall hidCommandProcess
-00011f ff01                      	sbrs r16, writeFlagInterRegBit
-000120 c005                      	rjmp normalHidWritePPointer
+00011c fd03                      	sbrc r16, writeFlagCommandBit
+00011d d01c                      	rcall hidCommandProcess
+00011e ff01                      	sbrs r16, writeFlagInterRegBit
+00011f c005                      	rjmp normalHidWritePPointer
                                  
-000121 e2ea                      		ldi r30, hidWriteRegisterLow
-000122 e0f1                      		ldi r31, hidWriteRegisterHigh
+000120 e2ea                      		ldi r30, hidWriteRegisterLow
+000121 e0f1                      		ldi r31, hidWriteRegisterHigh
                                  
-000123 9181                      		ld r24, z+
-000124 8190                      		ld r25, z
+000122 9181                      		ld r24, z+
+000123 8190                      		ld r25, z
                                  
-000125 c002                      	rjmp mainWritePortionOfHandler
+000124 c002                      	rjmp mainWritePortionOfHandler
                                  	normalHidWritePPointer:
-000126 e28a                      		ldi r24, hidWriteRegisterLow
-000127 e091                      		ldi r25, hidWriteRegisterHigh
+000125 e28a                      		ldi r24, hidWriteRegisterLow
+000126 e091                      		ldi r25, hidWriteRegisterHigh
                                  
                                  	mainWritePortionOfHandler:
-000128 2fe8                      		mov r30, r24
-000129 2ff9                      		mov r31, r25
+000127 2fe8                      		mov r30, r24
+000128 2ff9                      		mov r31, r25
                                  
-00012a 0fe1                      		add r30, r17
+000129 0fe1                      		add r30, r17
                                  
-00012b 8200                      		st z, r0
-00012c 9503                      		inc r16
+00012a 8200                      		st z, r0
+00012b 9503                      		inc r16
                                  
-00012d ff02                      	sbrs r16, writeFlagCheckCommandBit
-00012e c006                      	rjmp endOfHidWriteHandler
+00012c ff02                      	sbrs r16, writeFlagCheckCommandBit
+00012d c006                      	rjmp endOfHidWriteHandler
                                  
-00012f 3280                      	cpi r24, hidCommandRegisterLow
-000130 f421                      	brne endOfHidWriteHandler
-000131 3091                      	cpi r25, hidCommandRegisterHigh
-000132 f411                      	brne endOfHidWriteHandler
+00012e 3280                      	cpi r24, hidCommandRegisterLow
+00012f f421                      	brne endOfHidWriteHandler
+000130 3091                      	cpi r25, hidCommandRegisterHigh
+000131 f411                      	brne endOfHidWriteHandler
                                  
-000133 6008                      	ori r16, writeFlagCommandProcMask
+000132 6008                      	ori r16, writeFlagCommandProcMask
                                  	
                                  
-000134 d006                      	rcall hidCommandProcess
+000133 d006                      	rcall hidCommandProcess
                                  
                                  	endOfHidWriteHandler:
                                  
-000135 930c                      	st x, r16
+000134 930c                      	st x, r16
                                  
-000136 911f                      	pop r17
-000137 910f                      	pop r16
-000138 91bf                      	pop r27
-000139 91af                      	pop r26
+000135 911f                      	pop r17
+000136 910f                      	pop r16
+000137 91bf                      	pop r27
+000138 91af                      	pop r26
                                  
-00013a 9508                       ret
+000139 9508                       ret
                                  
                                   hidCommandProcess:
                                  
-00013b e2e0                      	ldi r30, hidCommandRegisterLow
-00013c e0f1                      	ldi r31, hidCommandRegisterHigh
+00013a e2e0                      	ldi r30, hidCommandRegisterLow
+00013b e0f1                      	ldi r31, hidCommandRegisterHigh
                                  
-00013d 9181                      	ld r24, z+
-00013e 8190                      	ld r25, z
+00013c 9181                      	ld r24, z+
+00013d 8190                      	ld r25, z
                                  
                                  	//comapre to opcodes
-00013f 3091                      	cpi r25, resetCommandHighB
-000140 f029                      	breq resetCommandJump
-000141 3092                      	cpi r25, getReportCommandHigh
-000142 f071                      	breq getReportCommandJump
-000143 3098                      	cpi r25, setPowerCommandHigh
-000144 f099                      	breq setPowerCommandJump
-000145 c016                      	rjmp endOfCommandProc
+00013e 3091                      	cpi r25, resetCommandHighB
+00013f f029                      	breq resetCommandJump
+000140 3092                      	cpi r25, getReportCommandHigh
+000141 f071                      	breq getReportCommandJump
+000142 3098                      	cpi r25, setPowerCommandHigh
+000143 f099                      	breq setPowerCommandJump
+000144 c016                      	rjmp endOfCommandProc
                                  	//jump table
                                  	resetCommandJump:
-000146 e2e6                      		ldi r30, hidInputRegisterLow
-000147 e0f1                      		ldi r31, hidInputRegisterHigh
+000145 e2e6                      		ldi r30, hidInputRegisterLow
+000146 e0f1                      		ldi r31, hidInputRegisterHigh
                                  		//clear the input register for reset init
+000147 9211                      		st z+, r1
 000148 9211                      		st z+, r1
 000149 9211                      		st z+, r1
-00014a 9211                      		st z+, r1
-00014b 8210                      		st z, r1
+00014a 8210                      		st z, r1
                                  		//set error to make sure gpio int is pulled 
-00014c e2ee                      		ldi r30, hidErrorFlagLow
-00014d e0f1                      		ldi r31, hidErrorFlagHigh
+00014b e2ee                      		ldi r30, hidErrorFlagLow
+00014c e0f1                      		ldi r31, hidErrorFlagHigh
                                  
-00014e e071                      		ldi r23, forceResetError
-00014f 8370                      		st z, r23
-000150 c00b                      		rjmp endOfCommandProc
+00014d e071                      		ldi r23, forceResetError
+00014e 8370                      		st z, r23
+00014f c00b                      		rjmp endOfCommandProc
                                  
                                  	getReportCommandJump:
                                  		//incoming report read set write read register to input for reading
-000151 e2ea                      		ldi r30, hidWriteRegisterLow
-000152 e0f1                      		ldi r31, hidWriteRegisterHigh
+000150 e2ea                      		ldi r30, hidWriteRegisterLow
+000151 e0f1                      		ldi r31, hidWriteRegisterHigh
                                  
-000153 e296                      		ldi r25, hidInputRegisterLow
-000154 e081                      		ldi r24, hidInputRegisterHigh
+000152 e296                      		ldi r25, hidInputRegisterLow
+000153 e081                      		ldi r24, hidInputRegisterHigh
                                  
-000155 9391                      		st z+, r25
-000156 8380                      		st z, r24
-000157 c004                      		rjmp endOfCommandProc
+000154 9391                      		st z+, r25
+000155 8380                      		st z, r24
+000156 c004                      		rjmp endOfCommandProc
                                  
                                  	setPowerCommandJump:
                                  		//set error to place processor into low power sleep mode
-000158 e2ee                      		ldi r30, hidErrorFlagLow
-000159 e0f1                      		ldi r31, hidErrorFlagHigh
+000157 e2ee                      		ldi r30, hidErrorFlagLow
+000158 e0f1                      		ldi r31, hidErrorFlagHigh
                                  
-00015a e072                      		ldi r23, powerLowError
-00015b 8370                      		st z, r23
-                                 
-                                 
-                                 
-                                 
+000159 e072                      		ldi r23, powerLowError
+00015a 8370                      		st z, r23
                                  	endOfCommandProc:
                                  
                                  
-00015c 9508                       ret
+00015b 9508                       ret
                                  
                                  
                                   //end of I2C HID event handlers
@@ -1841,88 +1835,92 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                   hidPullIntruptLine://if return in r24 is anything other then zero it failed to pull the line
                                  	//check to make sure no on going transaction is occuring
                                  	//get the flag value
-00015d e2ec                      	ldi r30, hidFlagLow
-00015e e0f1                      	ldi r31, hidFlagHigh
+00015c e2ec                      	ldi r30, hidFlagLow
+00015d e0f1                      	ldi r31, hidFlagHigh
                                  
-00015f 8180                      	ld r24, z
+00015e 8180                      	ld r24, z
                                  
-000160 1581                      	cp r24, r1
-000161 f469                      	brne hidFinnishedPullUp
+00015f 1581                      	cp r24, r1
+000160 f481                      	brne hidFinnishedPullUp
                                  	
                                  	//get read count as indication of ungoing read transaction
-000162 e2ed                      	ldi r30, hidReadCounterLow
-000163 e0f1                      	ldi r31, hidReadCounterHigh
+000161 e2ed                      	ldi r30, hidReadCounterLow
+000162 e0f1                      	ldi r31, hidReadCounterHigh
                                  
-000164 8180                      	ld r24, z
+000163 8180                      	ld r24, z
                                  
-000165 1581                      	cp r24, r1
-000166 f441                      	brne hidFinnishedPullUp
+000164 1581                      	cp r24, r1
+000165 f459                      	brne hidFinnishedPullUp
                                  
                                  	//if made it here there is no ongoign I2C transaction
                                  	//set input register for reading in write register
-000167 e2ea                      	ldi r30, hidWriteRegisterLow
-000168 e0f1                      	ldi r31, hidWriteRegisterHigh
-000169 e266                      	ldi r22, hidInputRegisterLow
-00016a e071                      	ldi r23, hidInputRegisterHigh
+000166 e2ea                      	ldi r30, hidWriteRegisterLow
+000167 e0f1                      	ldi r31, hidWriteRegisterHigh
+000168 e266                      	ldi r22, hidInputRegisterLow
+000169 e071                      	ldi r23, hidInputRegisterHigh
                                  
-00016b 9361                      	st z+, r22
-00016c 8370                      	st z, r23
+00016a 9361                      	st z+, r22
+00016b 8370                      	st z, r23
+                                 	//clear the error(afteraction) register
+00016c e2ee                      	ldi r30, hidErrorFlagLow
+00016d e0f1                      	ldi r31, hidErrorFlagHigh
+                                 
+00016e 8210                      	st z, r1
                                  	//pull the gpio line high
+00016f 9a5a                      	sbi PORTD, potbGPIOintruptPinBit
                                  
-00016d 9a5a                      	sbi PORTD, potbGPIOintruptPinBit
-                                 
-00016e 2d81                      	mov r24, r1
+000170 2d81                      	mov r24, r1
                                  	hidFinnishedPullUp:
                                  
-00016f 9508                       ret
+000171 9508                       ret
                                  
                                  
                                   hidGetErrorCode:
                                   //set z pointer to error flag ld r24 and return that code
-000170 e2ee                      	ldi r30, hidErrorFlagLow
-000171 e0f1                      	ldi r31, hidErrorFlagHigh
+000172 e2ee                      	ldi r30, hidErrorFlagLow
+000173 e0f1                      	ldi r31, hidErrorFlagHigh
                                  
-000172 8180                      	ld r24, z
+000174 8180                      	ld r24, z
                                  
-000173 9508                       ret
+000175 9508                       ret
                                  
                                   hidSetInputVal://r24-25 value to to input register
                                  				//if return in r24 is anything other then zero it failed to pull the line
                                  
                                  	//check to make sure no on going transaction is occuring
                                  	//get the flag value
-000174 e2ec                      	ldi r30, hidFlagLow
-000175 e0f1                      	ldi r31, hidFlagHigh
+000176 e2ec                      	ldi r30, hidFlagLow
+000177 e0f1                      	ldi r31, hidFlagHigh
                                  
-000176 8140                      	ld r20, z
+000178 8140                      	ld r20, z
                                  
-000177 1541                      	cp r20, r1
-000178 f461                      	brne hidFillInputRegDone
+000179 1541                      	cp r20, r1
+00017a f461                      	brne hidFillInputRegDone
                                  	
                                  	//get read count as indication of ungoing read transaction
-000179 e2ed                      	ldi r30, hidReadCounterLow
-00017a e0f1                      	ldi r31, hidReadCounterHigh
+00017b e2ed                      	ldi r30, hidReadCounterLow
+00017c e0f1                      	ldi r31, hidReadCounterHigh
                                  
-00017b 8140                      	ld r20, z
+00017d 8140                      	ld r20, z
                                  
-00017c 1541                      	cp r20, r1
-00017d f439                      	brne hidFillInputRegDone
+00017e 1541                      	cp r20, r1
+00017f f439                      	brne hidFillInputRegDone
                                  	
                                  	//if made to this point no ongoing I2C HID transaction is ocurring
-00017e e2e6                      	ldi r30, hidInputRegisterLow
-00017f e0f1                      	ldi r31, hidInputRegisterHigh
+000180 e2e6                      	ldi r30, hidInputRegisterLow
+000181 e0f1                      	ldi r31, hidInputRegisterHigh
                                  
-000180 e064                      	ldi r22, hidInputRegisterLength
+000182 e064                      	ldi r22, hidInputRegisterLength
                                  
                                  	//store (length of report) + (report data) in input register
-000181 9361                      	st z+, r22
-000182 9211                      	st z+, r1
-000183 9381                      	st z+, r24
-000184 8390                      	st z, r25
+000183 9361                      	st z+, r22
+000184 9211                      	st z+, r1
+000185 9381                      	st z+, r24
+000186 8390                      	st z, r25
                                  
                                  	hidFillInputRegDone: 
-000185 2f84                      	mov r24, r20
-000186 9508                       ret
+000187 2f84                      	mov r24, r20
+000188 9508                       ret
                                  
                                   //enof I2C HID exposed driver functions
                                  
@@ -2012,27 +2010,27 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                   setUpI2CDevice: //r24 slave address to set (loads full byte into address register including general call address FYI)
                                  
                                  	//set the two wire bit rate
-000187 ebe8                      	ldi r30, TWBR //setup pointer to the bit rate Two wire register
-000188 27ff                      	clr r31	;clear high z pointer 
+000189 ebe8                      	ldi r30, TWBR //setup pointer to the bit rate Two wire register
+00018a 27ff                      	clr r31	;clear high z pointer 
                                  
-000189 e092                      	ldi r25, twiBitMaskRate ; value of 2 for bit rate to achieve 400khz fast mode
+00018b e092                      	ldi r25, twiBitMaskRate ; value of 2 for bit rate to achieve 400khz fast mode
                                  
-00018a 8390                      	st z, r25
+00018c 8390                      	st z, r25
                                  
                                  	//set the slave address
-00018b ebea                      	ldi r30, TWAR
+00018d ebea                      	ldi r30, TWAR
                                  
-00018c 8380                      	st z, r24
+00018e 8380                      	st z, r24
                                  
                                  	//set the control register
-00018d ebec                      	ldi r30, TWCR
-00018e e495                      	ldi r25, twiControlRegMask
+00018f ebec                      	ldi r30, TWCR
+000190 e495                      	ldi r25, twiControlRegMask
                                  
-00018f 8390                      	st z, r25
+000191 8390                      	st z, r25
                                  
                                  	
                                  
-000190 9508                       ret
+000192 9508                       ret
                                  
                                   //end of I2C intialization
                                  
@@ -2041,34 +2039,34 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  
                                   getI2Cstatus:
                                  
-000191 ebe9                      	ldi r30, TWSR
-000192 27ff                      	clr r31
-000193 8180                      	ld r24, z
+000193 ebe9                      	ldi r30, TWSR
+000194 27ff                      	clr r31
+000195 8180                      	ld r24, z
                                  	
                                  
-000194 7f88                      	andi r24, 0xF8 ; keep only status flag
+000196 7f88                      	andi r24, 0xF8 ; keep only status flag
                                  
                                  	
                                  
-000195 9508                       ret
+000197 9508                       ret
                                  
                                   readI2Cdata:
                                  
-000196 ebeb                      	ldi r30, TWDR
-000197 27ff                      	clr r31
+000198 ebeb                      	ldi r30, TWDR
+000199 27ff                      	clr r31
                                  
-000198 8180                      	ld r24, z
+00019a 8180                      	ld r24, z
                                  
-000199 9508                       ret
+00019b 9508                       ret
                                  
                                   writeI2Cdata:
                                  
-00019a ebeb                      	ldi r30, TWDR
-00019b 27ff                      	clr r31
+00019c ebeb                      	ldi r30, TWDR
+00019d 27ff                      	clr r31
                                  
-00019c 8380                      	st z, r24
+00019e 8380                      	st z, r24
                                  
-00019d 9508                       ret
+00019f 9508                       ret
                                  
                                  
                                   //end of I2C driver functions
@@ -2201,24 +2199,24 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  //delay values is calculated as follows
                                  //(MCUhz - 10) / 12 = 1 sec loop iterations * number of secs to run = 32bit input val
                                  
-00019e c004                      	rjmp delayLoopCompare
+0001a0 c004                      	rjmp delayLoopCompare
                                  	// 5 cycles set up
                                  
                                  	delayLoopDec:
                                  
-00019f 5061                      		subi r22, 1
-0001a0 4070                      		sbci r23, 0
-0001a1 4080                      		sbci r24, 0
-0001a2 4090                      		sbci r25, 0
+0001a1 5061                      		subi r22, 1
+0001a2 4070                      		sbci r23, 0
+0001a3 4080                      		sbci r24, 0
+0001a4 4090                      		sbci r25, 0
                                  		//4 cycles
                                  	delayLoopCompare:
-0001a3 2400                      		clr r0
-0001a4 2a06                      		or r0, r22
-0001a5 2a07                      		or r0, r23
-0001a6 2a08                      		or r0, r24
-0001a7 2a09                      		or r0, r25
-0001a8 1401                      		cp r0, r1
-0001a9 f7a9                      		BRNE delayLoopDec
+0001a5 2400                      		clr r0
+0001a6 2a06                      		or r0, r22
+0001a7 2a07                      		or r0, r23
+0001a8 2a08                      		or r0, r24
+0001a9 2a09                      		or r0, r25
+0001aa 1401                      		cp r0, r1
+0001ab f7a9                      		BRNE delayLoopDec
                                  		//8 cycles total  
                                  
                                  		//one loop is 12 cycles
@@ -2227,7 +2225,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  		//5 cycles (this includes the former BRNE statement) for clean 
                                  
                                  
-0001aa 9508                      ret
+0001ac 9508                      ret
                                  
 
 
@@ -2246,11 +2244,11 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega48A" register use summary:
-x  :  12 y  :   0 z  :  55 r0 :  12 r1 :  20 r2 :   5 r3 :   0 r4 :   0 
+x  :  12 y  :   0 z  :  56 r0 :  12 r1 :  21 r2 :   5 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
 r13:   0 r14:   0 r15:   0 r16:  25 r17:   7 r18:   0 r19:   0 r20:  12 
 r21:   3 r22:  14 r23:  12 r24:  87 r25:  31 r26:   9 r27:   9 r28:   0 
-r29:   0 r30:  45 r31:  40 
+r29:   0 r30:  46 r31:  41 
 Registers used: 17 out of 35 (48.6%)
 
 "ATmega48A" instruction use summary:
@@ -2264,21 +2262,21 @@ clh   :   0 cli   :   0 cln   :   0 clr   :  14 cls   :   0 clt   :   0
 clv   :   0 clz   :   0 com   :   0 cp    :   8 cpc   :   0 cpi   :  13 
 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 
 icall :   0 ijmp  :   0 in    :   3 inc   :   3 ld    :  26 ldd   :   0 
-ldi   : 106 lds   :   0 lpm   :   0 lsl   :   0 lsr   :   0 mov   :  10 
+ldi   : 108 lds   :   0 lpm   :   0 lsl   :   0 lsr   :   0 mov   :  10 
 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :  20 
-or    :   4 ori   :   7 out   :  11 pop   :  18 push  :  18 rcall :  25 
+or    :   4 ori   :   7 out   :  11 pop   :  18 push  :  18 rcall :  24 
 ret   :  18 reti  :   4 rjmp  :  25 rol   :   0 ror   :   0 sbc   :   0 
 sbci  :   3 sbi   :   4 sbic  :   1 sbis  :   0 sbiw  :   0 sbr   :   0 
 sbrc  :   6 sbrs  :   2 sec   :   0 seh   :   0 sei   :   1 sen   :   0 
 ser   :   0 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   1 
-spm   :   0 st    :  41 std   :   0 sts   :   0 sub   :   0 subi  :   1 
+spm   :   0 st    :  42 std   :   0 sts   :   0 sub   :   0 subi  :   1 
 swap  :   0 tst   :   0 wdr   :   0 
 Instructions used: 33 out of 111 (29.7%)
 
 "ATmega48A" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000356    854      0    854    4096  20.8%
+[.cseg] 0x000000 0x00035a    858      0    858    4096  20.9%
 [.dseg] 0x000100 0x000100      0      0      0     512   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
