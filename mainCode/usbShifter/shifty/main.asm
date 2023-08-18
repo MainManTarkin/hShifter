@@ -179,10 +179,17 @@ start: ; Main program start
 	clr r1
 
 //start delay
+	ldi r30, delayLow
+	ldi r31, delayHigh
+
 	ldi r22, 0x9A;----------------------------------
 	ldi r23, 0x02;	word ? 1 millisec
 	ldi r24, 0x00;
 	ldi r25, 0x00;--------------------------------
+	st z+, r22
+	st z+, r23
+	st z+, r24
+	st z, r25
 
 	rcall delayLoop
 
@@ -262,9 +269,6 @@ start: ; Main program start
 	out EIFR, r25
 	out PCIFR, r25
 
-	//clear zero register
-	ldi r17, 0
-	mov r1, r17
 
 	sei
 
@@ -277,8 +281,10 @@ main:
 
 	ld r2, x
 
-	ldi r24, 4
-	mov r2, r24
+	//test flag remove for release
+	//ldi r24, 4
+	//mov r2, r24
+	//^
 
 	sbrc r2, twiFlagBitNum;check for TWI flag
 	rcall mainFlagHandler
@@ -451,7 +457,7 @@ ret
 	.equ eepromHidReportAddressOffset = 0
 	.equ eepromHIDReportLength = 31
 
-	.equ eepromHidDescriptorOffset = 33
+	.equ eepromHidDescriptorOffset = 32
 	.equ eepromHidDescriptorLength = 29
 
 	.equ TWIslaveAddress = 0x06
@@ -570,6 +576,11 @@ initHidDriver:
 
 	st z, r1
 
+	//init readCounter to zero
+	ldi r30, hidReadCounterLow
+	ldi r31, hidReadCounterHigh
+	st z, r1
+
 ret
 
  fillReportRegister://r24 eeprom address offset | r22 length of report | r20 register desanation
@@ -653,18 +664,16 @@ ret
 	rjmp mainHidEventHandlerEnd
 
 	statusConBeganRead:
-		ldi r30, hidReadCounterLow
-		ldi r31, hidReadCounterHigh
-		st z, r1
-		rcall hidReadHandler
-		rjmp mainHidEventHandlerEnd
+		
 
 	statusConDataAcked:
 		rcall hidReadHandler
 		rjmp mainHidEventHandlerEnd
 	statusConDataNAcked:
 		cbi PORTD, potbGPIOintruptPinBit ; clear the gpio pin regardless of set or not
-
+		ldi r30, hidReadCounterLow
+		ldi r31, hidReadCounterHigh
+		st z, r1
 
 	
 	
@@ -684,6 +693,7 @@ ret
 
  ret
 
+ 
 
  hidReadHandler:
 
@@ -694,8 +704,7 @@ ret
 	ldi r30, hidWriteRegisterLow
 	ldi r31, hidWriteRegisterHigh
 
-	ld r26, z+
-	ld r27, z
+	ld r26, z
 
 	cpi r26, 0x2F
 	brne contToRead
@@ -712,14 +721,16 @@ ret
 
 	ld r0, z
 
+	//add offset to 16-bit read address
 	add r26, r0
 	adc r27, r1
-	//get data to transmit on the bus
-	ld r24, x
 
 	//increment read counter and store back
 	inc r0
 	st z, r0
+
+	//get data to transmit on the bus
+	ld r24, x
 
 	//set data to tranmit in TWI data register
 	rcall writeI2Cdata
@@ -868,7 +879,7 @@ ret
 	//get the flag value
 	ldi r30, hidFlagLow
 	ldi r31, hidFlagHigh
-
+	
 	ld r24, z
 
 	cp r24, r1
@@ -877,12 +888,11 @@ ret
 	//get read count as indication of ungoing read transaction
 	ldi r30, hidReadCounterLow
 	ldi r31, hidReadCounterHigh
-
+	
 	ld r24, z
 
 	cp r24, r1
 	brne hidFinnishedPullUp
-
 	//if made it here there is no ongoign I2C transaction
 	//set input register for reading in write register
 	ldi r30, hidWriteRegisterLow
@@ -1021,7 +1031,7 @@ ret
 
 	//pin bits
 
-	.equ potbGPIOintruptPinBit = 2
+	.equ potbGPIOintruptPinBit = 0
 
 	//enof pin bits
 
@@ -1210,6 +1220,8 @@ ret
 .equ outPutRegisterHigh =  0x01
 .equ outputRegisterLength = 1
 
+
+
 //end of hid memory region
 //ends at 0x4E01
 
@@ -1221,14 +1233,34 @@ ret
 .equ eventLoopLength = 1
 
 //end of eventLoop region
-//ends at 0x2F01
+//ends at 0x4F01
 
+//delay memory region
+//starts at 0x4F01
+
+.equ delayLow = 0x4F
+.equ delayHigh = 0x01
+.equ delayMemLength = 4
+
+//end of delay memory region
+//ends at 0x5301
 
 //delay script for button debouning  (glorifed for loop)
 
 delayLoop:; parameters unsigned 32 bit int, lsb r22 msb r25
 //delay values is calculated as follows
 //(MCUhz - 10) / 12 = 1 sec loop iterations * number of secs to run = 32bit input val
+	push r22
+	push r23
+	push r24
+	push r25
+
+	ldi r30, delayLow
+	ldi r31, delayHigh
+	ld r22, z+
+	ld r23, z+
+	ld r24, z+
+	ld r25, z
 
 	rjmp delayLoopCompare
 	// 5 cycles set up
@@ -1254,7 +1286,10 @@ delayLoop:; parameters unsigned 32 bit int, lsb r22 msb r25
 	delayLoopEnd:
 		
 		//5 cycles (this includes the former BRNE statement) for clean 
-
+		pop r25
+		pop r24
+		pop r23
+		pop r22
 
 ret
 
