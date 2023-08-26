@@ -455,7 +455,7 @@ ret
 	//TWI HID Defines
 
 	.equ eepromHidReportAddressOffset = 0
-	.equ eepromHIDReportLength = 31
+	.equ eepromHIDReportLength = 32
 
 	.equ eepromHidDescriptorOffset = 32
 	.equ eepromHidDescriptorLength = 29

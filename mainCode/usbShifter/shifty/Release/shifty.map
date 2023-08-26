@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Aug 17 20:22:35 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Aug 24 10:24:27 2023
 
 
 EQU  SIGNATURE_000 0000001e
@@ -701,7 +701,7 @@ EQU  enablePCI1BitSet 00000002
 EQU  pinChange1BitMask 00000003
 EQU  sleepModePowerDownMask 00000004
 EQU  eepromHidReportAddressOffset 00000000
-EQU  eepromHIDReportLength 0000001f
+EQU  eepromHIDReportLength 00000020
 EQU  hidReportRegisterLow 00000000
 EQU  hidReportRegisterHigh 00000001
 CSEG fillReportRegister 000000ce

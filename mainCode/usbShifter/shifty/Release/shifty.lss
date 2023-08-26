@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Aug 17 20:22:35 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Aug 24 10:24:27 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
@@ -1200,7 +1200,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  	//fill report register with report descriptor
 000070 e080                      	ldi r24, eepromHidReportAddressOffset
 000071 2799                      	clr r25
-000072 e16f                      	ldi r22, eepromHIDReportLength
+000072 e260                      	ldi r22, eepromHIDReportLength
 000073 2777                      	clr r23
 000074 e040                      	ldi r20, hidReportRegisterLow
 000075 e051                      	ldi r21, hidReportRegisterHigh
@@ -1424,7 +1424,7 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
                                  	//TWI HID Defines
                                  
                                  	.equ eepromHidReportAddressOffset = 0
-                                 	.equ eepromHIDReportLength = 31
+                                 	.equ eepromHIDReportLength = 32
                                  
                                  	.equ eepromHidDescriptorOffset = 32
                                  	.equ eepromHidDescriptorLength = 29
