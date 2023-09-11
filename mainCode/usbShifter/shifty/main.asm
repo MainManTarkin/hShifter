@@ -44,10 +44,10 @@ hfuse:D7
 
  vectorTable:
 	rjmp start ; Reset Handler
-	rjmp shiftStateChange ; EXTINT0 IRQ0 Handler
-	rjmp testButton ; EXTINT1 IRQ1 Handler
-	nop ; PCINT0 Handler
-	rjmp buttonStateChange ; PCINT1 Handler
+	rjmp buttonStateChange ; EXTINT0 IRQ0 Handler
+	rjmp buttonStateChange ; EXTINT1 IRQ1 Handler
+	rjmp shiftStateChange ; PCINT0 Handler
+	rjmp testButton ; PCINT1 Handler
 	nop ; PCINT2 Handler
 	nop ; Watchdog Timer Handler
 	nop ; Timer2 Compare A Handler
@@ -107,7 +107,7 @@ buttonStateChange:
 	
 	ld r24, z
 
-	ori r24, addShiftFlagBit
+	ori r24, addButtonPressFlagBit
 
 	st z, r24
 
@@ -211,14 +211,19 @@ start: ; Main program start
 	ldi r24, enableExInt0BitSet
 	out EIMSK, r24
 	
-//set up PCI1
+//set up PCI2 and 0
 	ldi r30, PCICR
-	ldi r24, enablePCI1BitSet
+	ldi r24, enablePCIBitSet
 	st z, r24 ; turn on PCI1
 
-	ldi r30, PCMSK1
-	ldi r24, pinChange1BitMask ; bit mask for enable the specfic PCI1 pins
+	ldi r30, PCMSK2
+	ldi r24, pinChange2BitMask ; bit mask for enable the specfic PCI1 pins
 	st z, r24
+
+	ldi r30, PCMSK0
+	ldi r24, pinChange0BitMask ; bit mask for enable the specfic PCI1 pins
+	st z, r24
+
 
 //prepare sleep mode
 
@@ -333,7 +338,7 @@ ret
 
 //end of test functions
 
-//the pins for are H-Shifter have changed their logic levels get the states 
+//the pins for are H-Shifter have changed their logic levels, get the states 
 //and store this in the HID input register, hold the INT line high to indicate to hid chip 
 //that the host need to handle this new change
 
@@ -365,6 +370,8 @@ getShiftValues:
 
 	rjmp doneWithShiftValuesGet
 
+	//if seting input line failed (most likely due too an already existing i2c transaction going on)
+	//then readd the flag until it works
 	failedInputHIDnew:
 		ori r16, addShiftFlagBit
 		st x, r16
@@ -418,17 +425,17 @@ ret
 
 	//enof exint0 pin bit defines
 
-	//pin change 1 defines
+	//pin change defines
 
-	.equ enablePCI1BitSet = 2
+	.equ enablePCIBitSet = 0x05
 
-		//pin change 1 bit masks
+		//pin change  bit masks
 
-		.equ pinChange1BitMask = 0x03
+		.equ pinChange2BitMask = 0x08
+		.equ pinChange0BitMask = 0xff
+		//enof pin change bit masks
 
-		//enof pin change 1 bit masks
-
-	//enof pin change 1 defines
+	//enof pin change  defines
 
 	//sleep mode bit mask
 
@@ -478,9 +485,10 @@ ret
 
 		//event flag OR ADD bit mask
 
-		.equ addShiftFlagBit = 0x01
+		.equ addShiftFlagBit = 0x81
 		.equ addTWIFlagBit = 0x04
 		.equ addTestFlagBit =0x08 
+		.equ addButtonPressFlagBit = 0x01
 		//enof event flag OR ADD bit mask
 
 		
