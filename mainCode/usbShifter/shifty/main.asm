@@ -408,6 +408,7 @@ getShiftValues:
 	//if seting input line failed (most likely due too an already existing i2c transaction going on)
 	//then readd the flag until it works
 	failedInputHIDnew:
+		ld r16, x
 		or r16, r17
 		andi r16, removeStageFlagBit
 		st x, r16
@@ -455,8 +456,16 @@ mainFlagHandler:
 	sbrs r16, 7
 	rjmp endMainFlagHandler
 
+	//check write flags for write transaction
 	ldi r30, hidFlagLow
 	ldi r31, hidFlagHigh
+	ld r24, z
+
+	cpi r24, 0
+	brne endMainFlagHandler
+	//check the read counter for a read transaction
+	ldi r30, hidReadCounterLow
+	ldi r31, hidReadCounterHigh
 	ld r24, z
 
 	cpi r24, 0

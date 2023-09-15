@@ -28,12 +28,12 @@
   <shiftStateChange><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>120</LINE></shiftStateChange>
   <testButton><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>78</LINE></testButton>
   <usbTWI><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>141</LINE></usbTWI>
-  <delayLoop><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1317</LINE></delayLoop>
-  <fillReportRegister><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>653</LINE></fillReportRegister>
-  <initHidDriver><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>628</LINE></initHidDriver>
-  <setUpI2CDevice><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1118</LINE></setUpI2CDevice>
+  <delayLoop><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1326</LINE></delayLoop>
+  <fillReportRegister><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>662</LINE></fillReportRegister>
+  <initHidDriver><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>637</LINE></initHidDriver>
+  <setUpI2CDevice><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1127</LINE></setUpI2CDevice>
   <main><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>285</LINE></main>
-  <mainFlagHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>435</LINE></mainFlagHandler>
+  <mainFlagHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>436</LINE></mainFlagHandler>
   <getShiftValues><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>345</LINE></getShiftValues>
   <testButtonActivated><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>313</LINE></testButtonActivated>
   <errorCatchLoop><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>307</LINE></errorCatchLoop>
@@ -43,43 +43,43 @@
   <nonShiftEvent><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>393</LINE></nonShiftEvent>
   <shifterInGear><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>382</LINE></shifterInGear>
   <regularShiftSet><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>391</LINE></regularShiftSet>
-  <hidSetInputVal><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>995</LINE></hidSetInputVal>
+  <hidSetInputVal><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1004</LINE></hidSetInputVal>
   <failedInputHIDnew><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>410</LINE></failedInputHIDnew>
-  <hidPullIntruptLine><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>944</LINE></hidPullIntruptLine>
-  <doneWithShiftValuesGet><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>415</LINE></doneWithShiftValuesGet>
-  <powerDownMode><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>421</LINE></powerDownMode>
-  <mainHidEventHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>686</LINE></mainHidEventHandler>
-  <hidGetErrorCode><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>986</LINE></hidGetErrorCode>
-  <endMainFlagHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>470</LINE></endMainFlagHandler>
-  <reportLoopCompare><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>673</LINE></reportLoopCompare>
-  <reportEEPROMLoop><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>664</LINE></reportEEPROMLoop>
-  <getI2Cstatus><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1148</LINE></getI2Cstatus>
-  <statusConBeginWrite><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>706</LINE></statusConBeginWrite>
-  <statusConDataRecieved><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>712</LINE></statusConDataRecieved>
-  <statusConEOT><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>716</LINE></statusConEOT>
-  <errorStatusNAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>719</LINE></errorStatusNAcked>
-  <codeConvertSLARbegin><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>724</LINE></codeConvertSLARbegin>
-  <mainHidEventHandlerEnd><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>750</LINE></mainHidEventHandlerEnd>
-  <hidWriteHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>811</LINE></hidWriteHandler>
-  <statusConBeganRead><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>733</LINE></statusConBeganRead>
-  <statusConDataAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>736</LINE></statusConDataAcked>
-  <statusConDataNAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>739</LINE></statusConDataNAcked>
-  <hidReadHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>765</LINE></hidReadHandler>
-  <contToRead><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>783</LINE></contToRead>
-  <writeI2Cdata><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1170</LINE></writeI2Cdata>
-  <readI2Cdata><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1161</LINE></readI2Cdata>
-  <hidCommandProcess><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>882</LINE></hidCommandProcess>
-  <normalHidWritePPointer><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>845</LINE></normalHidWritePPointer>
-  <mainWritePortionOfHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>849</LINE></mainWritePortionOfHandler>
-  <endOfHidWriteHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>871</LINE></endOfHidWriteHandler>
-  <resetCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>899</LINE></resetCommandJump>
-  <getReportCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>915</LINE></getReportCommandJump>
-  <setPowerCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>927</LINE></setPowerCommandJump>
-  <endOfCommandProc><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>934</LINE></endOfCommandProc>
-  <hidFinnishedPullUp><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>981</LINE></hidFinnishedPullUp>
-  <hidFillInputRegDone><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1029</LINE></hidFillInputRegDone>
-  <delayLoopCompare><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1342</LINE></delayLoopCompare>
-  <delayLoopDec><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1335</LINE></delayLoopDec>
-  <delayLoopEnd><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1353</LINE></delayLoopEnd>
+  <hidPullIntruptLine><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>953</LINE></hidPullIntruptLine>
+  <doneWithShiftValuesGet><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>416</LINE></doneWithShiftValuesGet>
+  <powerDownMode><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>422</LINE></powerDownMode>
+  <mainHidEventHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>695</LINE></mainHidEventHandler>
+  <hidGetErrorCode><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>995</LINE></hidGetErrorCode>
+  <endMainFlagHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>479</LINE></endMainFlagHandler>
+  <reportLoopCompare><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>682</LINE></reportLoopCompare>
+  <reportEEPROMLoop><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>673</LINE></reportEEPROMLoop>
+  <getI2Cstatus><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1157</LINE></getI2Cstatus>
+  <statusConBeginWrite><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>715</LINE></statusConBeginWrite>
+  <statusConDataRecieved><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>721</LINE></statusConDataRecieved>
+  <statusConEOT><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>725</LINE></statusConEOT>
+  <errorStatusNAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>728</LINE></errorStatusNAcked>
+  <codeConvertSLARbegin><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>733</LINE></codeConvertSLARbegin>
+  <mainHidEventHandlerEnd><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>759</LINE></mainHidEventHandlerEnd>
+  <hidWriteHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>820</LINE></hidWriteHandler>
+  <statusConBeganRead><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>742</LINE></statusConBeganRead>
+  <statusConDataAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>745</LINE></statusConDataAcked>
+  <statusConDataNAcked><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>748</LINE></statusConDataNAcked>
+  <hidReadHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>774</LINE></hidReadHandler>
+  <contToRead><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>792</LINE></contToRead>
+  <writeI2Cdata><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1179</LINE></writeI2Cdata>
+  <readI2Cdata><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1170</LINE></readI2Cdata>
+  <hidCommandProcess><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>891</LINE></hidCommandProcess>
+  <normalHidWritePPointer><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>854</LINE></normalHidWritePPointer>
+  <mainWritePortionOfHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>858</LINE></mainWritePortionOfHandler>
+  <endOfHidWriteHandler><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>880</LINE></endOfHidWriteHandler>
+  <resetCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>908</LINE></resetCommandJump>
+  <getReportCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>924</LINE></getReportCommandJump>
+  <setPowerCommandJump><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>936</LINE></setPowerCommandJump>
+  <endOfCommandProc><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>943</LINE></endOfCommandProc>
+  <hidFinnishedPullUp><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>990</LINE></hidFinnishedPullUp>
+  <hidFillInputRegDone><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1038</LINE></hidFillInputRegDone>
+  <delayLoopCompare><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1351</LINE></delayLoopCompare>
+  <delayLoopDec><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1344</LINE></delayLoopDec>
+  <delayLoopEnd><FILE>C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm</FILE><LINE>1362</LINE></delayLoopEnd>
  </LABELS>
 </ASSEMBLER_INFO>

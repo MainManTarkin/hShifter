@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Tue Sep 12 15:21:15 2023
+AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode\usbShifter\shifty\main.asm Thu Sep 14 19:43:42 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m48Adef.inc'
@@ -1016,8 +1016,8 @@ AVRASM ver. 2.2.8  C:\Users\Brandon Davis\Documents\ECE\projects\hshift\mainCode
 000001 c023                      	rjmp buttonStateChange ; EXTINT0 IRQ0 Handler
 000002 c022                      	rjmp buttonStateChange ; EXTINT1 IRQ1 Handler
 000003 c02d                      	rjmp shiftStateChange ; PCINT0 Handler
-000004 c014                      	rjmp testButton ; PCINT1 Handler
-000005 0000                      	nop ; PCINT2 Handler
+000004 0000                      	nop ; PCINT1 Handler
+000005 c013                      	rjmp testButton ; PCINT2 Handler
 000006 0000                      	nop ; Watchdog Timer Handler
 000007 0000                      	nop ; Timer2 Compare A Handler
 000008 0000                      	nop ; Timer2 Compare B Handler
