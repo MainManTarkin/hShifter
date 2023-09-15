@@ -47,8 +47,8 @@ hfuse:D7
 	rjmp buttonStateChange ; EXTINT0 IRQ0 Handler
 	rjmp buttonStateChange ; EXTINT1 IRQ1 Handler
 	rjmp shiftStateChange ; PCINT0 Handler
-	rjmp testButton ; PCINT1 Handler
-	nop ; PCINT2 Handler
+	nop ; PCINT1 Handler
+	rjmp testButton ; PCINT2 Handler
 	nop ; Watchdog Timer Handler
 	nop ; Timer2 Compare A Handler
 	nop ; Timer2 Compare B Handler
@@ -347,6 +347,9 @@ getShiftValues:
 	//remove shift flag bit
 	ld r16, x
 
+	mov r17, r16 //make copy of r16 to determine what type of flag (shift or button press) for recovery use
+	andi r17, removeNonButtonFFlags
+
 	andi r16, removeShiftFlagBit
 
 	st x, r16
@@ -357,8 +360,40 @@ getShiftValues:
 	
 	in r24, PINB
 	in r25, PINC
-
+	//since the TWI is part of the C pins a mask is used to only allow the two pins that are for the level/splitter buttons
 	andi r25, pincButtonMask
+
+	//handle a shift event which needs to act like a button press
+	sbrs r16, 7
+	rjmp nonShiftEvent
+
+	//check to see of shifter is in neutral
+	cpi r24, 0
+	brne shifterInGear
+	ori r25, 4 //set the neutral button
+	sbrs r16, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
+	rjmp regularShiftSet
+
+	//this handles the emulated relase button event
+	andi r16, removeShiftStageFlagBit
+	andi r25, 0x03 //remove the neutral button
+	rjmp nonShiftEvent
+
+	shifterInGear:
+		sbrs r16, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
+		rjmp regularShiftSet
+
+		//this handles the emulated relase button event
+		andi r16, removeShiftStageFlagBit
+		mov r24, r1
+		rjmp nonShiftEvent
+
+		regularShiftSet:
+			ori r16, addShiftStageFlag
+	nonShiftEvent:
+	ld r0, x
+	or r16, r0
+	st x, r16
 
 	rcall hidSetInputVal
 	cp r24, r1
@@ -373,7 +408,8 @@ getShiftValues:
 	//if seting input line failed (most likely due too an already existing i2c transaction going on)
 	//then readd the flag until it works
 	failedInputHIDnew:
-		ori r16, addShiftFlagBit
+		or r16, r17
+		andi r16, removeStageFlagBit
 		st x, r16
 
 	doneWithShiftValuesGet:
@@ -413,6 +449,25 @@ mainFlagHandler:
 	rcall hidPullIntruptLine
 	sbrc r24, powerBitErr 
 	rcall powerDownMode ; if device is told to power down being going into low current mode
+
+	//handle shift event
+	//if the transaction has finished and the shift flag is set then renable the buttonPressed flag
+	sbrs r16, 7
+	rjmp endMainFlagHandler
+
+	ldi r30, hidFlagLow
+	ldi r31, hidFlagHigh
+	ld r24, z
+
+	cpi r24, 0
+	brne endMainFlagHandler
+
+	ld r0, x
+	ori r16, addButtonPressFlagBit
+	or r16, r0
+	st x, r16
+
+	endMainFlagHandler:
 
 ret
 
@@ -477,7 +532,10 @@ ret
 	.equ twiFlagBitNum = 2
 	.equ testFlagBitNum = 3
 		//event flag AND REMOVE bit masks
-
+		.equ removeNonButtonFFlags = 0x81
+		.equ removeStageFlagBit = 0xBF
+		.equ removeShiftEventFlagbit = 0x7F
+		.equ removeShiftStageFlagBit = 0x3F
 		.equ removeShiftFlagBit = 0xFE
 		.equ removeTWIFlagBit = 0xFB
 		.equ removeTestFlagBit = 0xF7
@@ -486,6 +544,7 @@ ret
 		//event flag OR ADD bit mask
 
 		.equ addShiftFlagBit = 0x81
+		.equ addShiftStageFlag = 0x40
 		.equ addTWIFlagBit = 0x04
 		.equ addTestFlagBit =0x08 
 		.equ addButtonPressFlagBit = 0x01
