@@ -118,20 +118,35 @@ buttonStateChange:
 reti
 
 shiftStateChange:
-
+	
 	push r30
 	push r31
 	push r24
+	push r28
+	push r29
 	
-	ldi r30, eventLoopLow
-	ldi r31, eventLoopHigh
+	ldi r30, buttonPressFlagsLow
+	ldi r31, buttonPressFlagsHigh
+	
+	// add event flag first
+	ldi r28, eventLoopLow
+	ldi r29,  eventLoopHigh
 
+	ld r24, y
+
+	ori r24, addButtonPressFlagBit
+
+	st y, r24
+
+	//then add special shift flag to its own register
 	ld r24, z
 
 	ori r24, addShiftFlagBit
 
 	st z, r24
 
+	pop r29
+	pop r28
 	pop r24
 	pop r31
 	pop r30
@@ -347,13 +362,15 @@ getShiftValues:
 	//remove shift flag bit
 	ld r16, x
 
-	mov r17, r16 //make copy of r16 to determine what type of flag (shift or button press) for recovery use
-	andi r17, removeNonButtonFFlags
-
 	andi r16, removeShiftFlagBit
 
 	st x, r16
-	
+
+	//fetch special shift flags if there are any
+	ldi r30, buttonPressFlagsLow
+	ldi r31, buttonPressFlagsHigh
+
+	ld r17, z
 	//fetch new input shift values
 
 	
@@ -364,36 +381,34 @@ getShiftValues:
 	andi r25, pincButtonMask
 
 	//handle a shift event which needs to act like a button press
-	sbrs r16, 7
+	sbrs r17, 7
 	rjmp nonShiftEvent
 
 	//check to see of shifter is in neutral
 	cpi r24, 0
 	brne shifterInGear
 	ori r25, 4 //set the neutral button
-	sbrs r16, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
+	sbrs r17, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
 	rjmp regularShiftSet
 
 	//this handles the emulated relase button event
-	andi r16, removeShiftStageFlagBit
+	andi r17, removeShiftStageFlagBit
 	andi r25, 0x03 //remove the neutral button
 	rjmp nonShiftEvent
 
 	shifterInGear:
-		sbrs r16, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
+		sbrs r17, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
 		rjmp regularShiftSet
 
 		//this handles the emulated relase button event
-		andi r16, removeShiftStageFlagBit
+		andi r17, removeShiftStageFlagBit
 		mov r24, r1
 		rjmp nonShiftEvent
 
 		regularShiftSet:
-			ori r16, addShiftStageFlag
+			ori r17, addShiftStageFlag
 	nonShiftEvent:
-	ld r0, x
-	or r16, r0
-	st x, r16
+	
 
 	rcall hidSetInputVal
 	cp r24, r1
@@ -413,8 +428,16 @@ getShiftValues:
 		andi r16, removeStageFlagBit
 		st x, r16
 
+		rjmp doneWithShiftValuesGetFailed
 	doneWithShiftValuesGet:
-	
+		//update special shift flags
+		ldi r30, buttonPressFlagsLow
+		ldi r31, buttonPressFlagsHigh
+
+		st z, r17
+
+	doneWithShiftValuesGetFailed:
+
 ret
 
 //The USB host has indicated the that all devices have to go in to low power mode
@@ -453,27 +476,24 @@ mainFlagHandler:
 
 	//handle shift event
 	//if the transaction has finished and the shift flag is set then renable the buttonPressed flag
-	sbrs r16, 7
+
+	//fetch special shift flags if there are any
+	ldi r30, buttonPressFlagsLow
+	ldi r31, buttonPressFlagsHigh
+
+	ld r17, z
+
+	sbrs r17, 7
 	rjmp endMainFlagHandler
 
-	//check write flags for write transaction
-	ldi r30, hidFlagLow
-	ldi r31, hidFlagHigh
-	ld r24, z
+	rcall twiTransactionCheck
 
-	cpi r24, 0
-	brne endMainFlagHandler
-	//check the read counter for a read transaction
-	ldi r30, hidReadCounterLow
-	ldi r31, hidReadCounterHigh
-	ld r24, z
-
-	cpi r24, 0
+	cp r24, r1
 	brne endMainFlagHandler
 
-	ld r0, x
+	//add flag to simulate button release and store 
+	ld r16, x
 	ori r16, addButtonPressFlagBit
-	or r16, r0
 	st x, r16
 
 	endMainFlagHandler:
@@ -541,7 +561,7 @@ ret
 	.equ twiFlagBitNum = 2
 	.equ testFlagBitNum = 3
 		//event flag AND REMOVE bit masks
-		.equ removeNonButtonFFlags = 0x81
+		.equ removeNonButtonFFlags = 0x80
 		.equ removeStageFlagBit = 0xBF
 		.equ removeShiftEventFlagbit = 0x7F
 		.equ removeShiftStageFlagBit = 0x3F
@@ -552,7 +572,7 @@ ret
 
 		//event flag OR ADD bit mask
 
-		.equ addShiftFlagBit = 0x81
+		.equ addShiftFlagBit = 0x80
 		.equ addShiftStageFlag = 0x40
 		.equ addTWIFlagBit = 0x04
 		.equ addTestFlagBit =0x08 
@@ -686,6 +706,35 @@ ret
 
  ret
 
+ //check to see if a read or write is currently ongoing
+ //return zero if there is no transaction
+ twiTransactionCheck:
+	push r30
+	push r31
+	
+
+	//check write flags for write transaction
+	ldi r30, hidFlagLow
+	ldi r31, hidFlagHigh
+	ld r24, z
+
+	cp r24, r1
+	brne twiTransactionCheckEnd
+	//check the read counter for a read transaction
+	ldi r30, hidReadCounterLow
+	ldi r31, hidReadCounterHigh
+	ld r24, z
+
+	cp r24, r1
+	brne twiTransactionCheckEnd
+
+	//if made it here then no transaction is occuring
+	twiTransactionCheckEnd:
+
+	pop r31
+	pop r30
+
+ ret
 
 
  //end of I2C HID intialization
@@ -952,20 +1001,7 @@ ret
 
  hidPullIntruptLine://if return in r24 is anything other then zero it failed to pull the line
 	//check to make sure no on going transaction is occuring
-	//get the flag value
-	ldi r30, hidFlagLow
-	ldi r31, hidFlagHigh
-	
-	ld r24, z
-
-	cp r24, r1
-	brne hidFinnishedPullUp
-	
-	//get read count as indication of ungoing read transaction
-	ldi r30, hidReadCounterLow
-	ldi r31, hidReadCounterHigh
-	
-	ld r24, z
+	rcall twiTransactionCheck
 
 	cp r24, r1
 	brne hidFinnishedPullUp
@@ -986,7 +1022,6 @@ ret
 	//pull the gpio line high
 	sbi PORTD, potbGPIOintruptPinBit
 
-	mov r24, r1
 	hidFinnishedPullUp:
 
  ret
@@ -1004,23 +1039,12 @@ ret
  hidSetInputVal://r24-25 value to to input register
 				//if return in r24 is anything other then zero it failed to pull the line
 
+	mov r0, r24
+
 	//check to make sure no on going transaction is occuring
-	//get the flag value
-	ldi r30, hidFlagLow
-	ldi r31, hidFlagHigh
+	rcall twiTransactionCheck
 
-	ld r20, z
-
-	cp r20, r1
-	brne hidFillInputRegDone
-	
-	//get read count as indication of ungoing read transaction
-	ldi r30, hidReadCounterLow
-	ldi r31, hidReadCounterHigh
-
-	ld r20, z
-
-	cp r20, r1
+	cp r24, r1
 	brne hidFillInputRegDone
 	
 	//if made to this point no ongoing I2C HID transaction is ocurring
@@ -1032,11 +1056,11 @@ ret
 	//store (length of report) + (report data) in input register
 	st z+, r22
 	st z+, r1
-	st z+, r24
+	st z+, r0
 	st z, r25
 
 	hidFillInputRegDone: 
-	mov r24, r20
+	
  ret
 
  //enof I2C HID exposed driver functions
@@ -1320,6 +1344,16 @@ ret
 
 //end of delay memory region
 //ends at 0x5301
+
+//buttonPressFlags memory
+//starts at 0x5301
+
+.equ buttonPressFlagsLow = 0x53
+.equ buttonPressFlagsHigh = 0x01
+.equ buttonPressFlagsMemLength = 1
+
+//end of buttonPressFlags memory
+//ends at 0x5401
 
 //delay script for button debouning  (glorifed for loop)
 
