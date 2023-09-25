@@ -44,10 +44,10 @@ hfuse:D7
 
  vectorTable:
 	rjmp start ; Reset Handler
-	rjmp buttonStateChange ; EXTINT0 IRQ0 Handler
-	rjmp buttonStateChange ; EXTINT1 IRQ1 Handler
-	rjmp shiftStateChange ; PCINT0 Handler
-	nop ; PCINT1 Handler
+	nop ; EXTINT0 IRQ0 Handler
+	nop ; EXTINT1 IRQ1 Handler
+	rjmp buttonStateChange ; PCINT0 Handler
+	rjmp buttonStateChange ; PCINT1 Handler
 	rjmp testButton ; PCINT2 Handler
 	nop ; Watchdog Timer Handler
 	nop ; Timer2 Compare A Handler
@@ -117,42 +117,6 @@ buttonStateChange:
 
 reti
 
-shiftStateChange:
-	
-	push r30
-	push r31
-	push r24
-	push r28
-	push r29
-	
-	ldi r30, buttonPressFlagsLow
-	ldi r31, buttonPressFlagsHigh
-	
-	// add event flag first
-	ldi r28, eventLoopLow
-	ldi r29,  eventLoopHigh
-
-	ld r24, y
-
-	ori r24, addButtonPressFlagBit
-
-	st y, r24
-
-	//then add special shift flag to its own register
-	ld r24, z
-
-	ori r24, addShiftFlagBit
-
-	st z, r24
-
-	pop r29
-	pop r28
-	pop r24
-	pop r31
-	pop r30
-
-reti
-
 usbTWI:
 
 	push r30
@@ -193,6 +157,7 @@ start: ; Main program start
 //clear zero register
 	clr r1
 
+
 //start delay
 	ldi r30, delayLow
 	ldi r31, delayHigh
@@ -215,28 +180,23 @@ start: ; Main program start
 
 	out DDRC, r24
 	out DDRD, r22
-
-//set up extint 0
 	
-	ldi r30, EICRA
-	clr r31
-	ldi r24, anyLogicalChangeBitSet
-	st z, r24
-
-	ldi r24, enableExInt0BitSet
-	out EIMSK, r24
-	
-//set up PCI2 and 0
+//set up PCI2 ,1, and 0
 	ldi r30, PCICR
+	clr r31
 	ldi r24, enablePCIBitSet
 	st z, r24 ; turn on PCI1
 
 	ldi r30, PCMSK2
-	ldi r24, pinChange2BitMask ; bit mask for enable the specfic PCI1 pins
+	ldi r24, pinChange2BitMask ; bit mask for enable the specfic PCI2 pin
+	st z, r24
+
+	ldi r30, PCMSK1
+	ldi r24, pinChange1BitMask ; bit mask for enable the specfic PCI1 pins
 	st z, r24
 
 	ldi r30, PCMSK0
-	ldi r24, pinChange0BitMask ; bit mask for enable the specfic PCI1 pins
+	ldi r24, pinChange0BitMask ; bit mask for enable all PCI0 pins
 	st z, r24
 
 
@@ -366,49 +326,11 @@ getShiftValues:
 
 	st x, r16
 
-	//fetch special shift flags if there are any
-	ldi r30, buttonPressFlagsLow
-	ldi r31, buttonPressFlagsHigh
-
-	ld r17, z
 	//fetch new input shift values
-
-	
-	
 	in r24, PINB
 	in r25, PINC
 	//since the TWI is part of the C pins a mask is used to only allow the two pins that are for the level/splitter buttons
 	andi r25, pincButtonMask
-
-	//handle a shift event which needs to act like a button press
-	sbrs r17, 7
-	rjmp nonShiftEvent
-
-	//check to see of shifter is in neutral
-	cpi r24, 0
-	brne shifterInGear
-	ori r25, 4 //set the neutral button
-	sbrs r17, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
-	rjmp regularShiftSet
-
-	//this handles the emulated relase button event
-	andi r17, removeShiftStageFlagBit
-	andi r25, 0x03 //remove the neutral button
-	rjmp nonShiftEvent
-
-	shifterInGear:
-		sbrs r17, 6 //check for first button press event or emulated relase event flag (note: need better name for it)
-		rjmp regularShiftSet
-
-		//this handles the emulated relase button event
-		andi r17, removeShiftStageFlagBit
-		mov r24, r1
-		rjmp nonShiftEvent
-
-		regularShiftSet:
-			ori r17, addShiftStageFlag
-	nonShiftEvent:
-	
 
 	rcall hidSetInputVal
 	cp r24, r1
@@ -428,15 +350,7 @@ getShiftValues:
 		andi r16, removeStageFlagBit
 		st x, r16
 
-		rjmp doneWithShiftValuesGetFailed
 	doneWithShiftValuesGet:
-		//update special shift flags
-		ldi r30, buttonPressFlagsLow
-		ldi r31, buttonPressFlagsHigh
-
-		st z, r17
-
-	doneWithShiftValuesGetFailed:
 
 ret
 
@@ -474,30 +388,7 @@ mainFlagHandler:
 	sbrc r24, powerBitErr 
 	rcall powerDownMode ; if device is told to power down being going into low current mode
 
-	//handle shift event
-	//if the transaction has finished and the shift flag is set then renable the buttonPressed flag
-
-	//fetch special shift flags if there are any
-	ldi r30, buttonPressFlagsLow
-	ldi r31, buttonPressFlagsHigh
-
-	ld r17, z
-
-	sbrs r17, 7
-	rjmp endMainFlagHandler
-
-	rcall twiTransactionCheck
-
-	cp r24, r1
-	brne endMainFlagHandler
-
-	//add flag to simulate button release and store 
-	ld r16, x
-	ori r16, addButtonPressFlagBit
-	st x, r16
-
-	endMainFlagHandler:
-
+	
 ret
 
 //main file defines
@@ -511,12 +402,13 @@ ret
 
 	//pin change defines
 
-	.equ enablePCIBitSet = 0x05
+	.equ enablePCIBitSet = 0x07
 
 		//pin change  bit masks
 
 		.equ pinChange2BitMask = 0x08
 		.equ pinChange0BitMask = 0xff
+		.equ pinChange1BitMask = 0x03
 		//enof pin change bit masks
 
 	//enof pin change  defines

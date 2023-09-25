@@ -5,8 +5,8 @@ PORTB - used for shifting(all pins reserved)
 PORTC - 
 	pc5 (pin 28) used for TWI SCL
 	pc4 (pin 27) used for TWI SDA
-	pc0 (pin 23) used for level button
-	pc1 (pin 24) used for shifter button
+	pc0 (pin 23) used for range 1 button
+	pc1 (pin 24) used for range 2 button
 	
 	button change are detected using pin change interrupt
 
