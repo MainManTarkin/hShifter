@@ -57,7 +57,7 @@ hfuse:D7
 	nop ; Timer1 Compare A Handler
 	nop ; Timer1 Compare B Handler
 	nop ; Timer1 Overflow Handler
-	nop ; Timer0 Compare A Handler
+	rjmp debounceEvent ; Timer0 Compare A Handler
 	nop ; Timer0 Compare B Handler
 	nop ; Timer0 Overflow Handler
 	nop ; SPI Transfer Complete Handler
@@ -81,19 +81,23 @@ testButton:
 	push r31
 	push r24
 
-	ldi r30, eventLoopLow
-	ldi r31, eventLoopHigh
+	
+
+	//set flag to raise once timer is complete
+	ldi r30, timedFlagLow
+	ldi r31, timedFlagHigh
 
 	ld r24, z
 
 	ori r24, addTestFlagBit
 
 	st z, r24
+	
+	rcall enableDebounceTimmer
 
 	pop r24
 	pop r31
 	pop r30
-
 reti
 
 buttonStateChange:
@@ -102,19 +106,21 @@ buttonStateChange:
 	push r31
 	push r24
 
-	ldi r30, eventLoopLow
-	ldi r31, eventLoopHigh
-	
+	//set flag to raise once timer is complete
+	ldi r30, timedFlagLow
+	ldi r31, timedFlagHigh
+
 	ld r24, z
 
 	ori r24, addButtonPressFlagBit
 
 	st z, r24
+	
+	rcall enableDebounceTimmer
 
 	pop r24
 	pop r31
 	pop r30
-
 reti
 
 usbTWI:
@@ -144,6 +150,51 @@ usbTWI:
 
 reti
 
+debounceEvent:
+
+	push r30
+	push r31
+	push r24
+	push r23
+
+	//disable timer
+	out TCCR0B, r1
+
+	//clear pinchange interrupt flags if any are set
+	//clear any flags made by bounce
+	ldi r24, clearInterruptFlags
+	out PCIFR, r24
+
+	//renable pinchange interrupt
+	ldi r30, PCICR
+	clr r31
+	ldi r24, enablePCIBitSet
+	st z, r24 
+
+	//set appropriate event flag
+
+	//get saved flag
+	ldi r30, timedFlagLow
+	ldi r31, timedFlagHigh
+
+	ld r24, z
+
+	//then set that flag in the event flag register
+	ldi r30, eventLoopLow
+	ldi r31, eventLoopHigh
+
+	ld r23, z
+
+	or r23, r24
+
+	st z, r23
+
+	pop r23
+	pop r24
+	pop r31
+	pop r30
+
+reti
 ;end of IRQH
 ;--------------------------------------------------------------------------------------
 
@@ -157,21 +208,18 @@ start: ; Main program start
 //clear zero register
 	clr r1
 
+//setup debouncing timer fixed compare val
 
-//start delay
-	ldi r30, delayLow
-	ldi r31, delayHigh
+ldi r24, maxTimerCompareVal
+ldi r25, timerInterruptEnable
 
-	ldi r22, 0x9A;----------------------------------
-	ldi r23, 0x02;	word ? 1 millisec
-	ldi r24, 0x00;
-	ldi r25, 0x00;--------------------------------
-	st z+, r22
-	st z+, r23
-	st z+, r24
-	st z, r25
+out OCR0A, r24
 
-	rcall delayLoop
+ldi r30, TIMSK0
+clr r31
+
+st z, r25
+//the interrupt and timer is set by the button press IRQs
 
 //set up i/o DD Registers
 
@@ -183,9 +231,8 @@ start: ; Main program start
 	
 //set up PCI2 ,1, and 0
 	ldi r30, PCICR
-	clr r31
 	ldi r24, enablePCIBitSet
-	st z, r24 ; turn on PCI1
+	st z, r24
 
 	ldi r30, PCMSK2
 	ldi r24, pinChange2BitMask ; bit mask for enable the specfic PCI2 pin
@@ -286,14 +333,7 @@ errorCatchLoop:
 
 	;TestButton creates a blocking delay in the program (to be removed in later versions)
 testButtonActivated:
-	//insert parameters for delay loop 
-	ldi r22, 0xCF;----------------------------------
-	ldi r23, 0x07;	word ? 3 millisec
-	ldi r24, 0x00;
-	ldi r25, 0x00;--------------------------------
-
-	rcall delayLoop
-
+	
 	ld r16, x
 
 	andi r16, removeTestFlagBit
@@ -1154,6 +1194,45 @@ ret
  //end of bit masks
 
 
+ //
+ //---------------------------------------------------------------------------
+ //
+ //				=================debounce.inc file=====================
+ //
+ //---------------------------------------------------------------------------
+ //
+
+ //called inside button press IRQs to reduce extra cycles from redudent steps
+ enableDebounceTimmer:
+
+ //disable pin change interrupts and clear their flags to prevent IRQ misfires
+	ldi r30, PCICR
+	clr r31
+
+	st z, r1
+	
+	//set debounce timer
+	ldi r31, timerPrescaleSet
+
+	out TCNT0, r1
+	out TCCR0B, r31
+
+
+ ret
+
+
+
+ //define values
+
+ .equ timerPrescaleSet = 0x05
+ .equ maxTimerCompareVal = 80
+ .equ timerInterruptEnable = 0x02
+ .equ clearInterruptFlags = 0x07
+
+
+ //enof define values
+
+
 
  //
  //---------------------------------------------------------------------------
@@ -1237,62 +1316,12 @@ ret
 //end of delay memory region
 //ends at 0x5301
 
-//buttonPressFlags memory
+//timed flag set register memory
 //starts at 0x5301
 
-.equ buttonPressFlagsLow = 0x53
-.equ buttonPressFlagsHigh = 0x01
-.equ buttonPressFlagsMemLength = 1
+.equ timedFlagLow = 0x53
+.equ timedFlagHigh = 0x01
+.equ timeFlagMemLength = 1
 
-//end of buttonPressFlags memory
+//end of timed flag set register memory
 //ends at 0x5401
-
-//delay script for button debouning  (glorifed for loop)
-
-delayLoop:; parameters unsigned 32 bit int, lsb r22 msb r25
-//delay values is calculated as follows
-//(MCUhz - 10) / 12 = 1 sec loop iterations * number of secs to run = 32bit input val
-	push r22
-	push r23
-	push r24
-	push r25
-
-	ldi r30, delayLow
-	ldi r31, delayHigh
-	ld r22, z+
-	ld r23, z+
-	ld r24, z+
-	ld r25, z
-
-	rjmp delayLoopCompare
-	// 5 cycles set up
-
-	delayLoopDec:
-
-		subi r22, 1
-		sbci r23, 0
-		sbci r24, 0
-		sbci r25, 0
-		//4 cycles
-	delayLoopCompare:
-		clr r0
-		or r0, r22
-		or r0, r23
-		or r0, r24
-		or r0, r25
-		cp r0, r1
-		BRNE delayLoopDec
-		//8 cycles total  
-
-		//one loop is 12 cycles
-	delayLoopEnd:
-		
-		//5 cycles (this includes the former BRNE statement) for clean 
-		pop r25
-		pop r24
-		pop r23
-		pop r22
-
-ret
-
-//enof button debouncer
