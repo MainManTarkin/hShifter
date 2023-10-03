@@ -11,8 +11,7 @@ PORTC -
 	button change are detected using pin change interrupt
 
 PORTD -
-	PD2 (pin 4) used for external interrupt for shift change
-	PD3 (pin 5) used for external interrupt for test light
+	PD3 (pin 5) used for external interrupt for test button
 	PD0 (pin 2) used for gpio intrupt for HID
 	PD1 (pin 3) used to drive test LED	
 

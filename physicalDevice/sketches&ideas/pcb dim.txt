@@ -1,0 +1,3 @@
+pcb dimmisions 
+L = 73.5 mm
+W = 63.91 mm
