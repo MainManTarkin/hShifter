@@ -1,4 +1,4 @@
-20350849100509307
+20362724761893111
 AT24C01C-SSHM-B
 SOIC127P600X175-8N
 
@@ -10961,6 +10961,13 @@ hdmi micro type d right angle tht smd hybrid
 0
 23
 20
+Connector_Harting
+Harthing 6 pin
+
+
+0
+6
+6
 Connector_Harting
 Harting_har-flexicon_14110213001xxx_1x02-MP_P2.54mm_Vertical
 Harting har-flexicon series connector, 14110213001xxx (https://b2b.harting.com/files/download/PRD/PDF_TS/1411XX13001XXX_100228421DRW046C.pdf), generated with kicad-footprint-generator
@@ -48313,6 +48320,13 @@ connector wire 2sqmm double-strain-relief
 0
 6
 6
+Connector_Wire
+SolderWirePad 10 3-3mm
+
+
+0
+10
+10
 Connector_Wire
 SolderWirePad_1x01_SMD_1x2mm
 Wire Pad, Square, SMD Pad,  5mm x 10mm,
@@ -86001,6 +86015,27 @@ varistor SIOV
 0
 2
 2
+Wima
+WIMA_XA_WIM
+
+SMDTC04470XA00MT00 
+0
+2
+2
+Wima
+WIMA_XA_WIM-L
+
+SMDTC04470XA00MT00 
+0
+2
+2
+Wima
+WIMA_XA_WIM-M
+
+SMDTC04470XA00MT00 
+0
+2
+2
 Wurth
 2512066017Y1 600Ohm FB
 
@@ -86034,8 +86069,15 @@ LSF-SMD
 
 
 0
-10
-10
+20
+20
+Wurth
+TactileButton
+
+
+0
+4
+1
 Wurth
 WCAP-AS5H Aluminum Electrolytic Capacitors
 
@@ -86043,3 +86085,10 @@ WCAP-AS5H Aluminum Electrolytic Capacitors
 0
 2
 2
+powerSelector
+SW_JS202011SCQN
+
+JS202011SCQN 
+0
+6
+6
